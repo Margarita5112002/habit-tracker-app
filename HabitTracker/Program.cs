@@ -1,7 +1,6 @@
-
-
 using System.Text;
 using HabitTracker.Data;
+using HabitTracker.Services.Habits;
 using HabitTracker.Services.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddHttpContextAccessor();
 builder.Services
     .AddDbContext<ApplicationDbContext>(options =>
     {
@@ -21,7 +21,9 @@ builder.Services
     });
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IHabitService, HabitService>();
 
 var jwtsettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 var tokenValidationParameters = new TokenValidationParameters

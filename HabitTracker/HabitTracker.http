@@ -1,13 +1,13 @@
 @HabitTracker_HostAddress = https://localhost:7213
-@AccessToken = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWFnaTEyMyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFAYS5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImM2ODNiOTJlLWM2ZjMtNDZjMS03MDJhLTA4ZGUxMDQ1ZTRhZiIsImp0aSI6ImZkMTVkNWY3LWI0NTMtNGU5ZC1hYmJkLThkNjkxM2QwMThmZiIsImV4cCI6MTc2MTAyOTI4MCwiaXNzIjoiSGFiaXQgVHJhY2tlciBBUEkiLCJhdWQiOiJVc2VycyJ9.Em7lhNJrYLK1s0Dwf8e_hRMqZdnIBMHDLUUbJzgjxZrObPKR8x_dlikN_f1ImYanVEMib28l0-yIsw8NwFABRg
-@RefreshToken = f3cdd17f-f6b8-43a1-a5ce-852aae40c6b4-bf190f99-0ec7-4c21-9cde-a976f26cb6a9
+@AccessToken = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWFyaWExMjMiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhQGIuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiOWJkYWZlNi0xYTc3LTRlNzAtZjI0MC0wOGRlMTFhNzlkYTAiLCJqdGkiOiJlZjdhZmNlOC03OWYyLTQzZDEtODQ2Yi00YWY3NmMzYmRlNWQiLCJleHAiOjE3NjExNjUyOTAsImlzcyI6IkhhYml0IFRyYWNrZXIgQVBJIiwiYXVkIjoiVXNlcnMifQ.X7T69zJxwS0Dm_YPyEVI-btoHxG5s80FlzHbPO0j9aToQDezqTlIahEEbuGMTEDM1iBbMGH_cAiWLVzZAZU6dQ
+@RefreshToken = f74de05c-212b-417c-8032-35125fc2bcb1-c5ae8d7a-ec10-4a28-95fa-f1c86f33676c
 
 POST {{HabitTracker_HostAddress}}/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "magi123",
-    "email": "a@a.com",
+    "username": "maria123",
+    "email": "a@b.com",
     "password": "135236"
 }
 
@@ -16,8 +16,8 @@ POST {{HabitTracker_HostAddress}}/api/auth/login
 Content-Type: application/json
 
 {
-    "userIdentifier": "magi123",
-    "password": "123456"
+    "userIdentifier": "maria123",
+    "password": "135236"
 }
 
 ###
@@ -32,4 +32,23 @@ Content-Type: application/json
 
 ###
 GET {{HabitTracker_HostAddress}}/api/auth/ping
+Authorization: bearer {{AccessToken}}
+
+###
+POST {{HabitTracker_HostAddress}}/api/habits
+Authorization: bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "name": "gym",
+    "color": "#ff00f",
+    "emoji": ":)",
+    "target": 10,
+    "frequencyInDays": 30,
+    "AllowCustomValue": true,
+    "AllowExceedTarget": true
+}
+
+###
+GET {{HabitTracker_HostAddress}}/api/Habits/1f6909d8-8afd-4e32-9936-08de119f1b7f
 Authorization: bearer {{AccessToken}}
