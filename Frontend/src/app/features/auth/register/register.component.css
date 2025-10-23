@@ -1,3 +1,91 @@
+.container {
+    display: flex;
+    align-items: center;
+    flex-flow: column nowrap;
+    gap: 32px;
+    padding: 40px 24px;
+}
+
+.header {
+    
+}
+
 .header h1 {
-    font-size: 2rem;
+    font-size: clamp(1rem, 10vw + 0.1rem, 2.5rem);
+    text-align: center;
+    color: var(--primary-purple);
+}
+
+.header p {
+    text-align: center;
+    font-size: clamp(0.5rem, 5vw + 0.1rem, 1rem);
+    font-weight: 500;
+    margin-top: 5px;
+    color: var(--primary-gray)
+}
+
+.register-form {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 8px;
+}
+
+.input-group {
+    
+}
+
+.input-text {
+    border-radius: 6px;
+    padding: 12px;
+    border: 1px #ccc solid;
+    width: 100%;
+    background-color: var(--primary-white);
+}
+
+.input-password {
+    padding-right: 40px;
+}
+
+.input-group:has(.input-password) {
+    position: relative;
+}
+
+.visibility-btn {
+    position: absolute;
+    background: none;
+    border: none;
+    right: 10px;
+    top: 10px;
+}
+
+.visibility-btn .icon {
+    color: var(--primary-gray);
+}
+
+.btn {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px var(--primary-gray) solid;
+    background-color: var(--primary-purple);
+    color: var(--primary-white);
+    font-size: 1rem;
+    margin-top: 16px;
+}
+
+.links {
+
+
+}
+
+.link {
+    color: var(--primary-gray);
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.link strong {
+    color: var(--primary-purple);
 }

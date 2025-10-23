@@ -1,11 +1,12 @@
 <div class="container">
-    <div class="header">
-      <h1>Sign Up</h1>
-      <p>Create a new account with your email</p>
-    </div>
+  <div class="header">
+    <h1>Sign Up</h1>
+    <p>Create a new account with your email</p>
+  </div>
   <form class="register-form">
     <div class="input-group">
       <input
+        class="input-text"
         type="text"
         name="username"
         placeholder="Username"
@@ -14,6 +15,7 @@
     </div>
     <div class="input-group">
       <input
+        class="input-text"
         type="text"
         name="email"
         placeholder="Email"
@@ -22,17 +24,30 @@
     </div>
     <div class="input-group">
       <input
-        type="password"
+        class="input-text input-password"
+        [type]="passwordVisible ? 'text' : 'password'"
         name="password"
         placeholder="Password"
         autocomplete="current-password"
       />
+      <button
+        (click)="togglePasswordVisibility()"
+        type="button"
+        name="change-visibility"
+        class="visibility-btn"
+      >
+        @if (passwordVisible) {
+        <mat-icon class="icon">visibility_off</mat-icon>
+        } @else {
+        <mat-icon class="icon">visibility</mat-icon>
+        }
+      </button>
     </div>
-    <input type="submit" value="Create a new account">
+    <input class="btn" type="submit" value="Create a new account" />
   </form>
   <div class="links">
-    <div class="link">
-        Already have an account? <a>Sign In</a>
-    </div>
+    <a class="link" routerLinkActive="/login" routerLink="/login">
+      Already have an account? <strong>Sign In</strong>
+    </a>
   </div>
 </div>
