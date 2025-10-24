@@ -4,6 +4,7 @@ import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AuthService } from "../../../services/auth.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { toSignal } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: 'app-register',
@@ -44,6 +45,9 @@ export class RegisterComponent {
     })
 
     showPassword = false
+    loading = toSignal(this.authService.getRegisterLoadingObservable(), {
+        initialValue: true
+    })
 
     get UsernameControl() {
         return this.registerForm.controls.username

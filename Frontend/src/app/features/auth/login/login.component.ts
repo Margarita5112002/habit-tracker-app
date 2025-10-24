@@ -4,6 +4,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { AuthService } from "../../../services/auth.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { toSignal } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: 'app-login',
@@ -25,6 +26,9 @@ export class LoginComponent {
     })
     showPassword = false
     errorMessage: string | null = null
+    loading = toSignal(this.authService.getLoginLoadingObservable(), {
+        initialValue: true
+    })
 
     get UserIdentifierControl() {
         return this.loginForm.controls.userIdentifier
