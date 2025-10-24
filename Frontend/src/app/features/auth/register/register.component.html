@@ -6,7 +6,7 @@
   <form
     (ngSubmit)="onSubmit($event)"
     [formGroup]="registerForm"
-    class="register-form"
+    class="form"
   >
     <div class="input-group">
       <input
@@ -63,7 +63,7 @@
         [type]="showPassword ? 'text' : 'password'"
         name="password"
         placeholder="Password"
-        autocomplete="current-password"
+        autocomplete="new-password"
         formControlName="password"
       />
       <button

@@ -1,18 +1,62 @@
-<div>
-  <form>
-    <div class="header">
-      <h1>Sign In</h1>
-      <p>Sign in with your email here</p>
-    </div>
-    <input
+<div class="container">
+  <div class="header">
+    <h1>Sign In</h1>
+    <p>Sign in with your email or username</p>
+  </div>
+  <form
+    (ngSubmit)="onSubmit($event)"
+    [formGroup]="loginForm"
+    class="form" 
+  >
+    <div class="input-group">
+      <input
+        class="input-text"
+        [class.input-text--error]="
+          UserIdentifierControl.invalid && UserIdentifierControl.dirty
+        "
         type="text"
         name="userIdentifier"
         placeholder="Email / Username"
-        autocomplete="username">
-    <input 
-        type="password"
+        autocomplete="userIdentifier"
+        formControlName="userIdentifier"
+      />
+      @if (UserIdentifierControl.dirty) { @if (UserIdentifierControl.hasError('required')) {
+      <div class="input-error">Write your email or username</div>
+      }}
+    </div>
+    <div class="input-group">
+      <input
+        class="input-text input-password"
+        [class.input-text--error]="
+          PasswordControl.invalid && PasswordControl.dirty
+        "
+        [type]="showPassword ? 'text' : 'password'"
         name="password"
         placeholder="Password"
-        autocomplete="current-password">
+        autocomplete="current-password"
+        formControlName="password"
+      />
+      <button
+        (click)="togglePasswordVisibility()"
+        type="button"
+        name="change-visibility"
+        class="visibility-btn"
+      >
+        @if (showPassword) {
+        <mat-icon class="icon">visibility_off</mat-icon>
+        } @else {
+        <mat-icon class="icon">visibility</mat-icon>
+        }
+      </button>
+      @if (PasswordControl.dirty) { @if (PasswordControl.hasError("required")) {
+      <div class="input-error">Password is required</div>
+      }}
+    </div>
+    <input class="btn" type="submit" value="Sign in" />
   </form>
+  <div class="links">
+    <a class="link" routerLinkActive="/register" routerLink="/register">
+      Don't have an account? <strong>Sign Up</strong>
+    </a>
+  </div>
 </div>
