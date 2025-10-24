@@ -2,6 +2,9 @@
   <div class="header">
     <h1>Sign In</h1>
     <p>Sign in with your email or username</p>
+    @if (errorMessage) {
+        <p class="error">{{errorMessage}}</p>
+    }
   </div>
   <form
     (ngSubmit)="onSubmit($event)"

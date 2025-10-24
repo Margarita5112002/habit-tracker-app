@@ -24,6 +24,11 @@
     color: var(--primary-gray)
 }
 
+.header .error {
+    margin-top: 20px;
+    color: var(--primary-red);
+}
+
 .form {
     width: 100%;
     max-width: 400px;

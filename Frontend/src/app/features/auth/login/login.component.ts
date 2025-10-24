@@ -1,7 +1,9 @@
 import { Component, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
-import { RouterLink, RouterLinkActive } from "@angular/router";
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { AuthService } from "../../../services/auth.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
     selector: 'app-login',
@@ -11,6 +13,8 @@ import { RouterLink, RouterLinkActive } from "@angular/router";
 })
 export class LoginComponent {
     private fb = inject(FormBuilder)
+    private authService = inject(AuthService)
+    private router = inject(Router)
     loginForm = this.fb.group({
         'userIdentifier': ['', [
             Validators.required
@@ -20,6 +24,7 @@ export class LoginComponent {
         ]]
     })
     showPassword = false
+    errorMessage: string | null = null
 
     get UserIdentifierControl() {
         return this.loginForm.controls.userIdentifier
@@ -34,6 +39,23 @@ export class LoginComponent {
     }
 
     onSubmit(e: SubmitEvent) {
+        if (this.loginForm.valid) {
+            this.authService.login({
+                userIdentifier: this.loginForm.value.userIdentifier ?? "",
+                password: this.loginForm.value.password ?? ""
+            }).subscribe({
+                next: () => {
+                    this.router.navigate(['/'])
+                },
+                error: err => {
+                    if (err instanceof HttpErrorResponse)
+                        this.handleLoginError(err)
+                }
+            })
+        }
+    }
 
+    handleLoginError(err: HttpErrorResponse) {
+        this.errorMessage = "Username, email or password is wrong"
     }
 }
