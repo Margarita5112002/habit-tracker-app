@@ -3,32 +3,68 @@
     <h1>Sign Up</h1>
     <p>Create a new account with your email</p>
   </div>
-  <form class="register-form">
+  <form
+    (ngSubmit)="onSubmit($event)"
+    [formGroup]="registerForm"
+    class="register-form"
+  >
     <div class="input-group">
       <input
         class="input-text"
+        [class.input-text--error]="
+          UsernameControl.invalid && UsernameControl.dirty
+        "
         type="text"
         name="username"
         placeholder="Username"
         autocomplete="username"
+        formControlName="username"
       />
+      @if (UsernameControl.dirty) { @if (UsernameControl.hasError('required')) {
+      <div class="input-error">Username is required</div>
+      } @else if (UsernameControl.hasError('minlength')) {
+      <div class="input-error">
+        Username needs to be at least 6 characters long
+      </div>
+      } @else if (UsernameControl.hasError('maxlength')) {
+      <div class="input-error">
+        Username cannot be longer than 50 characters
+      </div>
+      } @else if (UsernameControl.hasError('pattern')) {
+      <div class="input-error">Username cannot have "&#64;" character</div>
+      } @else if (UsernameControl.hasError('conflict')) {
+      <div class="input-error">Username was already taken</div>
+      }}
     </div>
     <div class="input-group">
       <input
         class="input-text"
-        type="text"
+        [class.input-text--error]="EmailControl.invalid && EmailControl.dirty"
+        type="email"
         name="email"
         placeholder="Email"
         autocomplete="email"
+        formControlName="email"
       />
+      @if (EmailControl.dirty) { @if (EmailControl.hasError("required")) {
+      <div class="input-error">Email is required</div>
+      } @else if(EmailControl.hasError("email")) {
+      <div class="input-error">Email is not valid</div>
+      } @else if (EmailControl.hasError("conflict")) {
+      <div class="input-error">Email was already taken</div>
+      }}
     </div>
     <div class="input-group">
       <input
         class="input-text input-password"
-        [type]="passwordVisible ? 'text' : 'password'"
+        [class.input-text--error]="
+          PasswordControl.invalid && PasswordControl.dirty
+        "
+        [type]="showPassword ? 'text' : 'password'"
         name="password"
         placeholder="Password"
         autocomplete="current-password"
+        formControlName="password"
       />
       <button
         (click)="togglePasswordVisibility()"
@@ -36,12 +72,23 @@
         name="change-visibility"
         class="visibility-btn"
       >
-        @if (passwordVisible) {
+        @if (showPassword) {
         <mat-icon class="icon">visibility_off</mat-icon>
         } @else {
         <mat-icon class="icon">visibility</mat-icon>
         }
       </button>
+      @if (PasswordControl.dirty) { @if (PasswordControl.hasError("required")) {
+      <div class="input-error">Password is required</div>
+      } @else if (PasswordControl.hasError('minlength')) {
+      <div class="input-error">
+        Password needs to be at least 6 characters long
+      </div>
+      } @else if (PasswordControl.hasError('maxlength')) {
+      <div class="input-error">
+        Password cannot be longer than 150 characters
+      </div>
+      }}
     </div>
     <input class="btn" type="submit" value="Create a new account" />
   </form>
