@@ -1,23 +1,21 @@
-<form>
+<form [formGroup]="form" (ngSubmit)="onSubmit($event)">
   <button type="button" (click)="togglePicker()">
     <span>{{emojiChose}}</span>
   </button>
-  <div class="input-group">
-    <label for="name">Name</label>
-    <input type="text" id="name" name="name" />
-  </div>
   @if (showPicker) {
     <app-emoji-picker (onClickOutside)="closeEmojiPicker()" (onEmojiSelect)="onEmojiChange($event)" />
   }
+  <div class="input-group">
+    <label for="name">Name</label>
+    <input formControlName="name" type="text" id="name" name="name" />
+  </div>
   <div class="input-group">
     <label for="description">Description</label>
     <input type="text" id="description" name="description" />
   </div>
   <div class="input-group">
-    <input type="radio" id="white-color" name="color" value="#ffffff" />
-    <label for="white-color">White</label>
-    <input type="radio" id="red-color" name="color" value="#ff0000" />
-    <label for="red-color">Red</label>
+    <label for="color">Color</label>
+    <app-color-picker id="color" formControlName="color" class="color-picker"/>
   </div>
   <div class="input-group">
     <label for="target">Target</label>
@@ -39,4 +37,5 @@
     <input type="radio" id="stepByStep" name="allowCustomValue" checked />
     <label for="stepByStep">Step by step</label>
   </div>
+  <input type="submit" value="Save"/>
 </form>

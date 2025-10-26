@@ -1,0 +1,14 @@
+<div class="container">
+  @for (color of COLORS; track $index) {
+  <button
+    type="button"
+    class="color"
+    (click)="chooseColor(color)"
+    [title]="color.name"
+    [style.backgroundColor]="color.hexa"
+    [class.isSelected]="!disabled() && equalColors(colorSelected(), color)"
+    [class.isDisabled]="disabled()"
+    [disabled]="disabled()"
+  ></button>
+  }
+</div>
