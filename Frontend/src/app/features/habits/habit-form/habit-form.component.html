@@ -23,12 +23,15 @@
   </div>
   <div class="input-group">
     <label for="frequency">Frecuency</label>
-    <select id="frequency" name="frequency">
-      <option>Every day</option>
-      <option>Every week</option>
-      <option>Every month</option>
-      <option>Custom</option>
+    <select formControlName="frequency" id="frequency" name="frequency">
+      <option value="1">Every day</option>
+      <option value="7">Every week</option>
+      <option value="30">Every month</option>
+      <option value="custom">Custom</option>
     </select>
+    @if (isFrequencyCustom) {
+        <input type="number" min="1" formControlName="frequencyCustom"/>
+    }
   </div>
   <div class="input-group">
     <label>How should completions by tracked?</label>

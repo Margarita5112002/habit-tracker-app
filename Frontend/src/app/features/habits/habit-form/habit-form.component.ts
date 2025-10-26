@@ -13,13 +13,21 @@ export class HabitFormComponent {
     fb = inject(FormBuilder)
     form = this.fb.group({
         'name': ['', [Validators.required]],
-        'color': ['#FF6B6B']
+        'color': ['#FF6B6B'],
+        'frequency': ["1"],
+        'frequencyCustom': [1, [Validators.min(1)]],
     })
 
     showPicker = false
     emojiChose = '🤓'
 
     constructor(private cdr: ChangeDetectorRef){}
+
+    get isFrequencyCustom() {
+        const n = Number.parseInt(this.form.value.frequency ?? "")
+        
+        return Number.isNaN(n)
+    }
 
     onSubmit(event: SubmitEvent) {
         console.log("subtmit", this.form.value)
