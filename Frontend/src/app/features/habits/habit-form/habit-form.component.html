@@ -1,0 +1,42 @@
+<form>
+  <button type="button" (click)="togglePicker()">
+    <span>{{emojiChose}}</span>
+  </button>
+  <div class="input-group">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" />
+  </div>
+  @if (showPicker) {
+    <app-emoji-picker (onClickOutside)="closeEmojiPicker()" (onEmojiSelect)="onEmojiChange($event)" />
+  }
+  <div class="input-group">
+    <label for="description">Description</label>
+    <input type="text" id="description" name="description" />
+  </div>
+  <div class="input-group">
+    <input type="radio" id="white-color" name="color" value="#ffffff" />
+    <label for="white-color">White</label>
+    <input type="radio" id="red-color" name="color" value="#ff0000" />
+    <label for="red-color">Red</label>
+  </div>
+  <div class="input-group">
+    <label for="target">Target</label>
+    <input type="number" id="target" name="target" />
+  </div>
+  <div class="input-group">
+    <label for="frequency">Frecuency</label>
+    <select id="frequency" name="frequency">
+      <option>Every day</option>
+      <option>Every week</option>
+      <option>Every month</option>
+      <option>Custom</option>
+    </select>
+  </div>
+  <div class="input-group">
+    <label>How should completions by tracked?</label>
+    <input type="radio" id="allowCustomValue" name="allowCustomValue" />
+    <label for="allowCustomValue">Allow Custom Value</label>
+    <input type="radio" id="stepByStep" name="allowCustomValue" checked />
+    <label for="stepByStep">Step by step</label>
+  </div>
+</form>
