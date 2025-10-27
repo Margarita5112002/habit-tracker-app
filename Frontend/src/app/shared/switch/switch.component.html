@@ -1,0 +1,38 @@
+<input
+  class="true-option-input"
+  [formControl]="formControl"
+  type="radio"
+  [id]="trueOption()"
+  name="switch"
+  [value]="trueOption()"
+/>
+<input
+  class="false-option-input"
+  [formControl]="formControl"
+  type="radio"
+  [id]="falseOption()"
+  name="switch"
+  [value]="falseOption()"
+/>
+<div class="container">
+  <label
+    [class.isDisabledLabel]="disabled()"
+    [class.isSelectedLabel]="!disabled() && IsTrue"
+    [for]="trueOption()"
+    >{{ trueOption() }}</label
+  >
+  <label
+    [class.isDisabledLabel]="disabled()"
+    [class.isSelectedLabel]="!disabled() && !IsTrue"
+    [for]="falseOption()"
+    >{{ falseOption() }}</label
+  >
+  @if (!disabled()) {
+  <span
+    class="chip"
+    [class.isTrue]="IsTrue"
+    [class.isFalse]="!IsTrue"
+  >
+  </span>
+  }
+</div>

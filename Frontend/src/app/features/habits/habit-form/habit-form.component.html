@@ -14,7 +14,7 @@
     <input type="text" id="description" name="description" />
   </div>
   <div class="input-group">
-    <label for="color">Color</label>
+    <label>Color</label>
     <app-color-picker id="color" formControlName="color" class="color-picker"/>
   </div>
   <div class="input-group">
@@ -35,10 +35,12 @@
   </div>
   <div class="input-group">
     <label>How should completions by tracked?</label>
-    <input type="radio" id="allowCustomValue" name="allowCustomValue" />
-    <label for="allowCustomValue">Allow Custom Value</label>
-    <input type="radio" id="stepByStep" name="allowCustomValue" checked />
-    <label for="stepByStep">Step by step</label>
+    <app-switch formControlName="allowCustomValue" falseOption="Step By Step" trueOption="Allow Custom Value" />
+    @if (allowCustomValue) {
+        <p>Insert a custom value for each completion</p>
+    } @else {
+        <p>Increase completions step by step</p>
+    }
   </div>
   <input type="submit" value="Save"/>
 </form>

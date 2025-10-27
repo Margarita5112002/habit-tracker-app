@@ -2,12 +2,13 @@ import { ChangeDetectorRef, Component, inject } from "@angular/core";
 import { EmojiPickerComponent } from "../../../shared/emoji-picker/emoji-picker.component";
 import { ColorPickerComponent } from "../../../shared/color-picker/color-picker.component";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { SwitchComponent } from "../../../shared/switch/switch.component";
 
 @Component({
     selector: 'app-habit-form',
     templateUrl: './habit-form.component.html',
     styleUrls: ['./habit-form.component.css'],
-    imports: [ReactiveFormsModule, EmojiPickerComponent, ColorPickerComponent]
+    imports: [ReactiveFormsModule, EmojiPickerComponent, ColorPickerComponent, SwitchComponent]
 })
 export class HabitFormComponent {
     fb = inject(FormBuilder)
@@ -16,12 +17,17 @@ export class HabitFormComponent {
         'color': ['#FF6B6B'],
         'frequency': ["1"],
         'frequencyCustom': [1, [Validators.min(1)]],
+        'allowCustomValue': [true]
     })
 
     showPicker = false
     emojiChose = '🤓'
 
     constructor(private cdr: ChangeDetectorRef){}
+
+    get allowCustomValue() {
+        return this.form.value.allowCustomValue ?? false
+    }
 
     get isFrequencyCustom() {
         const n = Number.parseInt(this.form.value.frequency ?? "")
