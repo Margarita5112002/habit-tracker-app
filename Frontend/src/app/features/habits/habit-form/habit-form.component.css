@@ -61,6 +61,16 @@
   border: 1px #bbb solid;
 }
 
+.input-invalid {
+    outline: 1px var(--primary-red) solid;
+}
+
+.input-error-msg {
+    font-size: 0.8rem;
+    color: var(--primary-red);
+    margin-top: 5px;
+}
+
 .input-with-text {
   margin-top: 5px;
   display: flex;
@@ -120,6 +130,11 @@
 .btn-cancel {
     background-color: var(--primary-gray);
     margin-bottom: 10px;
+}
+
+.btn-disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
 @media (min-width: 400px) {

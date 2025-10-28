@@ -1,4 +1,4 @@
-<form class="container" [formGroup]="form" (ngSubmit)="onSubmit($event)">
+<form class="container" [formGroup]="form" (ngSubmit)="onFormSubmit($event)">
   <div class="emoji-group" [style.backgroundColor]="selectedColor">
     <button class="emoji-group__btn" type="button" (click)="togglePicker()">
       <span class="emoji-group__span">{{ emojiChose }}</span>
@@ -16,22 +16,39 @@
     <label class="input-group__label" for="name">Name</label>
     <input
       class="input-group__input"
+      [class.input-invalid]="nameControl.invalid && nameControl.dirty"
       formControlName="name"
       type="text"
       id="name"
       name="name"
+      maxlength="150"
+      required
     />
+    @if (nameControl.dirty) { @if (nameControl.hasError("required")) {
+    <div class="input-error-msg">Write a name for the habit</div>
+    } @else if (nameControl.hasError("maxlength")) {
+    <div class="input-error-msg">Name cannot be longer than 150 characters</div>
+    } }
   </div>
 
   <div class="input-group">
     <label class="input-group__label" for="description">Description</label>
     <input
       class="input-group__input"
+      [class.input-invalid]="
+        descriptionControl.invalid && descriptionControl.dirty
+      "
       formControlName="description"
       type="text"
       id="description"
       name="description"
+      maxlength="500"
     />
+    @if (descriptionControl.dirty && descriptionControl.hasError("maxlength")) {
+    <div class="input-error-msg">
+      Description cannot be longer than 500 characters
+    </div>
+    }
   </div>
 
   <div class="input-group">
@@ -42,46 +59,54 @@
   <h3 class="division-title">Your Goal</h3>
 
   <div class="goal-group">
-  <div class="input-group">
-    <label for="target" class="input-group__label">Target</label>
-    <div class="input-with-text">
-      <input
-        class="target-input input-group__input"
-        type="number"
-        formControlName="target"
-        id="target"
-        name="target"
-      />
-      <span>completions</span>
+    <div class="input-group">
+      <label for="target" class="input-group__label">Target</label>
+      <div class="input-with-text">
+        <input
+          class="target-input input-group__input"
+          type="number"
+          formControlName="target"
+          id="target"
+          name="target"
+          min="1"
+          [class.input-invalid]="targetControl.invalid && targetControl.dirty"
+          required
+        />
+        <span>completions</span>
+      </div>
     </div>
-  </div>
 
-  <div class="input-group">
-    <label for="frequency" class="input-group__label">Frequency</label>
-    <select
-      class="frequency-input input-group__input"
-      formControlName="frequency"
-      id="frequency"
-      name="frequency"
-    >
-      <option value="1">Every day</option>
-      <option value="7">Every week</option>
-      <option value="30">Every month</option>
-      <option value="custom">Custom</option>
-    </select>
-    @if (isFrequencyCustom) {
-    <div class="input-with-text">
-      <span>Every</span>
-      <input
-        class="target-input input-group__input"
-        type="number"
-        min="1"
-        formControlName="frequencyCustom"
-      />
-      <span>days</span>
+    <div class="input-group">
+      <label for="frequency" class="input-group__label">Frequency</label>
+      <select
+        class="frequency-input input-group__input"
+        formControlName="frequency"
+        id="frequency"
+        name="frequency"
+        (change)="resetFrequencyCustom()"
+      >
+        <option value="1">Every day</option>
+        <option value="7">Every week</option>
+        <option value="30">Every month</option>
+        <option value="custom">Custom</option>
+      </select>
+      @if (isFrequencyCustom) {
+      <div class="input-with-text">
+        <span>Every</span>
+        <input
+          class="target-input input-group__input"
+          type="number"
+          min="1"
+          formControlName="frequencyCustom"
+          [class.input-invalid]="
+            frequencyCustomControl.invalid && frequencyCustomControl.dirty
+          "
+        />
+        <span>days</span>
+      </div>
+      }
     </div>
-    }
-  </div>
+    
   </div>
 
   <h3 class="division-title">Advance Options</h3>
@@ -131,6 +156,12 @@
     </div>
   </div>
 
-  <input class="btn btn-save" type="submit" value="Save" />
-  <input class="btn btn-cancel" type="button" value="Cancel" />
+  <input
+    class="btn btn-save"
+    [class.btn-disabled]="!formIsValid"
+    [disabled]="!formIsValid"
+    type="submit"
+    value="Save"
+  />
+  <input (click)="onClickCancel()" class="btn btn-cancel" type="button" value="Cancel" />
 </form>
