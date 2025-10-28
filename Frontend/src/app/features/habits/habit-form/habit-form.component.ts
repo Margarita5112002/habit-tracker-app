@@ -14,10 +14,13 @@ export class HabitFormComponent {
     fb = inject(FormBuilder)
     form = this.fb.group({
         'name': ['', [Validators.required]],
+        'description': [''],
         'color': ['#FF6B6B'],
+        'target': [1],
         'frequency': ["1"],
         'frequencyCustom': [1, [Validators.min(1)]],
-        'allowCustomValue': [true]
+        'allowCustomValue': [true],
+        'allowExceedTarget': [true],
     })
 
     showPicker = false
@@ -27,6 +30,12 @@ export class HabitFormComponent {
 
     get allowCustomValue() {
         return this.form.value.allowCustomValue ?? false
+    }
+    get allowExceedTarget() {
+        return this.form.value.allowExceedTarget ?? false
+    }
+    get selectedColor() {
+        return this.form.value.color ?? "#ffffff"
     }
 
     get isFrequencyCustom() {

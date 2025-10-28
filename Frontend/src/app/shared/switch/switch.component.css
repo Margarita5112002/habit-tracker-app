@@ -15,6 +15,9 @@ input {
 
 label {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   font-size: 0.8rem;
   z-index: 10;
