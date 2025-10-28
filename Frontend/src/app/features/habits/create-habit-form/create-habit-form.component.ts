@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { HabitFormComponent, HabitSubmitted } from "../habit-form/habit-form.component";
+import { HabitService } from "../../../services/habit.service";
 
 @Component({
     selector: 'app-create-habit-form',
@@ -8,9 +9,20 @@ import { HabitFormComponent, HabitSubmitted } from "../habit-form/habit-form.com
     imports: [HabitFormComponent]
 })
 export class CreateHabitFormComponent {
+    habitService = inject(HabitService)
 
     onSubmit(habit: HabitSubmitted) {
-        console.log(habit)
+        this.habitService.createHabit({
+            ...habit,
+            frequencyInDays: habit.frequency
+        }).subscribe({
+            next: data => {
+                console.log("creating habit sucess")
+            },
+            error: err => {
+                console.log("error creating habit", err)
+            }
+        })
     }
 
     onCancel() {

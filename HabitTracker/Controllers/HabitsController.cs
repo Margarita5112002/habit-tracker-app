@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HabitTracker.Models.DataTransferObjects;
 using HabitTracker.Models.Entities;
 using HabitTracker.Models.Requests;
 using HabitTracker.Services.Habits;
@@ -26,7 +27,10 @@ public class HabitsController(
         if (result.IsSuccess)
         {
             var createdHabit = result.Value;
-            return CreatedAtAction(nameof(GetHabitById), new { id = createdHabit.Id }, createdHabit);
+            return CreatedAtAction(
+                nameof(GetHabitById),
+                new { id = createdHabit.Id },
+                HabitToDTO(createdHabit));
         }
 
         Dictionary<string, List<string>> errors = result.Errors
@@ -36,7 +40,7 @@ public class HabitsController(
                 g => g.Key.ToString() ?? "",
                 g => g.Select(x => x.Message).ToList()
             );
-        
+
         return Problem(
             title: "Invalid habit",
             statusCode: StatusCodes.Status400BadRequest,
@@ -64,4 +68,21 @@ public class HabitsController(
 
         return BadRequest();
     }
+
+    private static HabitDTO HabitToDTO(Habit habit)
+    {
+        return new HabitDTO
+        {
+            Id = habit.Id,
+            Name = habit.Name,
+            Description = habit.Description,
+            Color = habit.Color,
+            Emoji = habit.Emoji,
+            Target = habit.Target,
+            FrequencyInDays = habit.FrequencyInDays,
+            AllowCustomValue = habit.AllowCustomValue,
+            AllowExceedTarget = habit.AllowExceedTarget
+        };
+    }
+
 }
