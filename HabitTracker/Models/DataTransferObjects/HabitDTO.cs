@@ -16,4 +16,6 @@ public class HabitDTO
     public bool AllowCustomValue { get; set; } = false;
     public bool AllowExceedTarget { get; set; } = false;
 
+    public List<HabitTrackDTO>? HabitTracks { get; set; } = null;
+
 }

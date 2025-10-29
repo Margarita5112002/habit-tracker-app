@@ -62,7 +62,23 @@ public class HabitsController(
         if (result.IsSuccess)
         {
             if (result.Value == null) return NotFound();
-            return Ok(result.Value);
+            return Ok(HabitToDTO(result.Value));
+        }
+
+        return BadRequest();
+    }
+    
+    [HttpGet]
+    public IActionResult GetAllHabits()
+    {
+        User? user = currentUser.GetUser();
+        if (user == null) return Unauthorized();
+
+        var result = habitService.GetAllByUser(user.Id);
+        if (result.IsSuccess)
+        {
+            var habits = result.Value.Select(HabitToDTO).ToList();
+            return Ok(habits);
         }
 
         return BadRequest();
@@ -70,6 +86,8 @@ public class HabitsController(
 
     private static HabitDTO HabitToDTO(Habit habit)
     {
+        var tracks = habit.HabitTracks?.Select(HabitTrackToDTO).ToList();
+
         return new HabitDTO
         {
             Id = habit.Id,
@@ -80,7 +98,19 @@ public class HabitsController(
             Target = habit.Target,
             FrequencyInDays = habit.FrequencyInDays,
             AllowCustomValue = habit.AllowCustomValue,
-            AllowExceedTarget = habit.AllowExceedTarget
+            AllowExceedTarget = habit.AllowExceedTarget,
+            HabitTracks = tracks,
+        };
+    }
+
+    private static HabitTrackDTO HabitTrackToDTO(HabitTrack track)
+    {
+        return new HabitTrackDTO
+        {
+            Id = track.Id,
+            Days = track.Days,
+            Month = track.Month,
+            Year = track.Year,
         };
     }
 

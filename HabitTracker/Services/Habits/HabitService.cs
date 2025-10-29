@@ -2,6 +2,7 @@ using FluentResults;
 using HabitTracker.Data;
 using HabitTracker.Models.Entities;
 using HabitTracker.Models.Requests;
+using Microsoft.EntityFrameworkCore;
 
 namespace HabitTracker.Services.Habits;
 
@@ -60,6 +61,15 @@ public class HabitService(
         var habit = context.Habits
             .FirstOrDefault(h => h.Id.ToString() == id && h.UserId == userId && !h.IsArchived);
         return Result.Ok(habit);
+    }
+
+    public Result<List<Habit>> GetAllByUser(Guid userId)
+    {
+        var habits = context.Habits
+            .Include(h => h.HabitTracks)
+            .Where(h => h.UserId == userId)
+            .ToList();
+        return Result.Ok(habits);
     }
 
 }

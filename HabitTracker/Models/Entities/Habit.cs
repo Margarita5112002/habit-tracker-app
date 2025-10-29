@@ -33,6 +33,6 @@ public class Habit
     [Required]
     public Guid UserId { get; set; }
     public User? User { get; set; }
-
+    public List<HabitTrack>? HabitTracks { get; set; }
 
 }
