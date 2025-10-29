@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using HabitTracker.Models.Entities;
-
 namespace HabitTracker.Models.DataTransferObjects;
 
 public class HabitDTO

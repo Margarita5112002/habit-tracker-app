@@ -2,7 +2,7 @@
   display: flex;
   flex-flow: column nowrap;
   gap: 10px;
-  padding: 20px;
+  padding: 0px 20px 10px 20px;
 }
 
 .division-title {
@@ -129,7 +129,6 @@
 
 .btn-cancel {
     background-color: var(--primary-gray);
-    margin-bottom: 10px;
 }
 
 .btn-disabled {

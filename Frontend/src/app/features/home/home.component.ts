@@ -1,11 +1,12 @@
 import { Component } from "@angular/core";
-import { CreateHabitFormComponent } from "../habits/create-habit-form/create-habit-form.component";
+import { MenuComponent } from "./menu/menu.component";
+import { RouterOutlet } from "@angular/router";
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
-    imports: [CreateHabitFormComponent]
+    imports: [MenuComponent, RouterOutlet]
 })
 export class HomeComponent {
     

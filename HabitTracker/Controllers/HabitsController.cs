@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using HabitTracker.Models.DataTransferObjects;
 using HabitTracker.Models.Entities;
 using HabitTracker.Models.Requests;
