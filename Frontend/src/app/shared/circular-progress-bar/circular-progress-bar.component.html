@@ -1,0 +1,7 @@
+<div class="loader-container">
+  <svg class="circular-loader" viewBox="0 0 200 200">
+    <circle class="loader-bg" [attr.fill]="backgroundColor()" cx="100" cy="100" r="90"></circle>
+    <circle class="loader-progress" [attr.stroke]="circleColor()" [style.strokeDashoffset]="strokeDashoffset()" cx="100" cy="100" r="90"></circle>
+  </svg>
+  <div class="label">{{labelText()}}</div>
+</div>

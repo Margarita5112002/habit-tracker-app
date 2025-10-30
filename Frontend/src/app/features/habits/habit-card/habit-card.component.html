@@ -1,0 +1,18 @@
+<div class="container">
+    <div class="header">
+        <div class="emoji-box" [ngStyle]="styles">
+            <span class="emoji">{{habit().emoji}}</span>
+        </div>
+        <div class="info">
+            <p class="info-name">{{habit().name}}</p>
+            <p class="info-desc">{{habit().description}}</p>
+        </div>
+        <button type="button" class="edit-track">
+            <app-circular-progress-bar
+                [circleColor]="this.getVariantColor('60')"
+                [backgroundColor]="getVariantColor('40')"
+                [percent]="50" />
+        </button>
+    </div>
+    <div>GRAPH PLACEHOLDER</div>
+</div>

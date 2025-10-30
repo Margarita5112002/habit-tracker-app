@@ -1,0 +1,58 @@
+.container {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 5px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: var(--primary-white);
+}
+
+.header {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: start;
+}
+
+.emoji-box {
+    width: clamp(32px, 20%, 64px);
+    aspect-ratio: 1 / 1;
+    flex: 0 1 auto;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.emoji {
+    font-size: clamp(1rem, 5dvw + 0.1rem, 35px);
+}
+
+.edit-track {
+    cursor: pointer;
+    width: clamp(32px, 20%, 56px);
+    border: none;
+    outline: 2px #ccc solid;
+    background-color: hsl(0, 0%, 93%);
+    border-radius: 6px;
+    flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+
+}
+
+.info {
+    flex: 1;
+    font-size: 1rem;
+}
+
+.info-name {
+    font-weight: 500;
+}
+
+.info-desc {
+    font-size: 0.8rem;
+    margin-top: 5px;
+}

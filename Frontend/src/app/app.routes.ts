@@ -8,6 +8,11 @@ export const routes: Routes = [
         canActivate: [authGuard],
         children: [
             {
+                path: '',
+                loadComponent: () => import('./features/home/dashboard/dashboard.component')
+                    .then(c => c.DashboardComponent),
+            },
+            {
                 path: 'create',
                 loadComponent: () => import('./features/habits/create-habit-form/create-habit-form.component')
                     .then(c => c.CreateHabitFormComponent),

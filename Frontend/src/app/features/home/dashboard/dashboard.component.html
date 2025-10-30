@@ -1,0 +1,11 @@
+<div>
+    <div class="habit-list">
+    @if (loading()) {
+        <div>loading ...</div>
+    } @else {
+        @for (habit of habits(); track $index) {
+            <app-habit-card [habit]="habit" />
+        }
+    }
+    </div>
+</div>

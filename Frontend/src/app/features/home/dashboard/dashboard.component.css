@@ -1,0 +1,6 @@
+.habit-list {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 20px;
+    margin: 20px;
+}
