@@ -24,6 +24,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IHabitService, HabitService>();
+builder.Services.AddScoped<IHabitTrackService, HabitTrackService>();
 
 var jwtsettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 var tokenValidationParameters = new TokenValidationParameters

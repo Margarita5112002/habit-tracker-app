@@ -13,7 +13,8 @@ namespace HabitTracker.Controllers;
 [Authorize]
 public class HabitsController(
     ICurrentUser currentUser,
-    IHabitService habitService
+    IHabitService habitService,
+    IHabitTrackService habitTrackService
 ) : ControllerBase
 {
     [HttpPost]
@@ -67,7 +68,7 @@ public class HabitsController(
 
         return BadRequest();
     }
-    
+
     [HttpGet]
     public IActionResult GetAllHabits()
     {
@@ -82,6 +83,28 @@ public class HabitsController(
         }
 
         return BadRequest();
+    }
+
+    [HttpPatch("{habitId}/track/{year}/{month}/days/increment")]
+    public async Task<IActionResult> IncrementHabitTrack(string habitId, int year, int month, [FromBody] IncrementHabitTrackerRequest request)
+    {
+        if (year < 2020) return BadRequest("Invalid year");
+        if (month < 1 || month > 12) return BadRequest("Invalid month");
+        var user = currentUser.GetUser();
+        if (user == null) return Unauthorized();
+
+        var habitResult = habitService.GetById(habitId, user.Id);
+        if (habitResult.IsFailed) return BadRequest();
+        var habit = habitResult.Value;
+        if (habit == null) return NotFound();
+
+        var track = habitTrackService.GetOrCreateHabitTrack(month, year, habit.Id);
+        var result = await habitTrackService.ApplyIncrements(track, request);
+        if (result.IsFailed)
+        {
+            return BadRequest(result.Errors);
+        }
+        return NoContent();
     }
 
     private static HabitDTO HabitToDTO(Habit habit)
