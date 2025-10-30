@@ -1,6 +1,7 @@
 import { Component, inject } from "@angular/core";
 import { HabitFormComponent, HabitSubmitted } from "../habit-form/habit-form.component";
 import { HabitService } from "../../../services/habit.service";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'app-create-habit-form',
@@ -10,6 +11,7 @@ import { HabitService } from "../../../services/habit.service";
 })
 export class CreateHabitFormComponent {
     habitService = inject(HabitService)
+    router = inject(Router)
 
     onSubmit(habit: HabitSubmitted) {
         this.habitService.createHabit({
@@ -17,16 +19,17 @@ export class CreateHabitFormComponent {
             frequencyInDays: habit.frequency
         }).subscribe({
             next: data => {
-                console.log("creating habit sucess")
+                this.router.navigate(['/'])
             },
             error: err => {
                 console.log("error creating habit", err)
+                this.router.navigate(['/'])
             }
         })
     }
 
     onCancel() {
-        console.log("cancel habit creation")
+        this.router.navigate(['/'])
     }
 
 }
