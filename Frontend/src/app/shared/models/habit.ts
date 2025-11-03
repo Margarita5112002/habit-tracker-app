@@ -1,3 +1,5 @@
+import { HabitTrack } from "./habit-track";
+
 export interface Habit {
     id: string,
     name: string,
@@ -7,5 +9,6 @@ export interface Habit {
     target: number,
     frequencyInDays: number,
     allowCustomValue: boolean,
-    allowExceedTarget: boolean
+    allowExceedTarget: boolean,
+    habitTracks?: HabitTrack[]
 }
