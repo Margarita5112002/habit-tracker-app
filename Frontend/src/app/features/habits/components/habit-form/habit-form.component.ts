@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, inject, output } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, input, output } from "@angular/core";
 import { EmojiPickerComponent } from "../../../../shared/emoji-picker/emoji-picker.component";
 import { ColorPickerComponent } from "../../../../shared/color-picker/color-picker.component";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { SwitchComponent } from "../../../../shared/switch/switch.component";
+import { Habit } from "../../models/habit.model";
 
 @Component({
     selector: 'app-habit-form',
@@ -22,8 +23,9 @@ export class HabitFormComponent {
         'allowCustomValue': [true],
         'allowExceedTarget': [true],
     })
-    onSubmitHabit = output<HabitSubmitted>()
+    onSubmitHabit = output<Omit<Habit, 'id'>>()
     onCancel = output<void>()
+    disabled = input(false)
 
     showPicker = false
     emojiChose = '🤓'
@@ -80,7 +82,7 @@ export class HabitFormComponent {
     }
 
     onFormSubmit(event: SubmitEvent) {
-        if (this.formIsValid) {
+        if (this.formIsValid && !this.disabled()) {
             const freqSelect = Number.parseInt(this.form.value.frequency ?? '1')
             const freq = Number.isNaN(freqSelect) ?
                 this.form.value.frequencyCustom ?? 1 : freqSelect
@@ -90,7 +92,7 @@ export class HabitFormComponent {
                 color: this.form.value.color ?? "#fff",
                 emoji: this.emojiChose,
                 target: this.form.value.target ?? 1,
-                frequency: freq,
+                frequencyInDays: freq,
                 allowCustomValue: this.form.value.allowCustomValue ?? false,
                 allowExceedTarget: this.form.value.allowExceedTarget ?? false
             })
@@ -112,15 +114,4 @@ export class HabitFormComponent {
         this.cdr.markForCheck()
     }
 
-}
-
-export interface HabitSubmitted {
-    name: string,
-    description: string | null,
-    color: string,
-    emoji: string,
-    target: number,
-    frequency: number,
-    allowCustomValue: boolean,
-    allowExceedTarget: boolean
 }

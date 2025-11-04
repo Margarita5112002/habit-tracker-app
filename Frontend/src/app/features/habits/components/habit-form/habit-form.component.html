@@ -158,8 +158,8 @@
 
   <input
     class="btn btn-save"
-    [class.btn-disabled]="!formIsValid"
-    [disabled]="!formIsValid"
+    [class.btn-disabled]="disabled() || !formIsValid"
+    [disabled]="disabled() || !formIsValid"
     type="submit"
     value="Save"
   />

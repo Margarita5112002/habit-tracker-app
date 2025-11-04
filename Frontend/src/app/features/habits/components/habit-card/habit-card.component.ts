@@ -2,8 +2,8 @@ import { Component, computed, inject, input } from "@angular/core";
 import { NgStyle } from "@angular/common";
 import { CircularProgressBarComponent } from "../../../../shared/circular-progress-bar/circular-progress-bar.component";
 import { HabitService } from "../../services/habit.service";
-import { getCompletionPercentage } from "../../utils/habit-utils";
-import { Habit } from "../../models/habit";
+import { Habit } from "../../models/habit.model";
+import { calculateCompletionPercentage } from "../../utils/habit-calculations.util";
 
 @Component({
     selector: 'app-habit-card',
@@ -19,17 +19,16 @@ export class HabitCardComponent {
         this.habit().habitTracks?.reduce((p, c) => p + c.days.reduce((pd, cd) => pd + cd), 0) ?? 0
     )
     percentage = computed(() => {
-        return getCompletionPercentage(this.habit())
+        return calculateCompletionPercentage(this.habit())
+    })
+    styles = computed(() => {
+        return {
+            'background-color': this.getVariantColor("20"),
+        }
     })
 
     getVariantColor(str: string) {
         return this.habit().color + str
-    }
-
-    get styles() {
-        return {
-            'background-color': this.getVariantColor("20"),
-        }
     }
 
     onIncrementClick() {

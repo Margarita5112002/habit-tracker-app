@@ -1,192 +1,144 @@
-import { inject, Injectable, OnDestroy } from "@angular/core";
-import { BehaviorSubject, debounceTime, EMPTY, finalize, scan, Subject, takeUntil, tap } from "rxjs";
-import { environment } from "../../../../environments/environment";
-import { HttpClient } from "@angular/common/http";
-import { Habit } from "../models/habit";
+import { inject, Injectable, OnDestroy } from "@angular/core"
+import { catchError, debounceTime, EMPTY, finalize, Observable, of, scan, Subject, takeUntil, tap } from "rxjs"
+import { Habit } from "../models/habit.model"
+import { HabitApiService } from "./habit-api.service"
+import { HabitStateService } from "./habit-state.service"
+import { CreateHabitRequest, HabitTrackChangeRequest } from "../models/habit-dtos.model"
+import { HabitTrackChange } from "../models/habit-track-change.model"
+import { applyChangeToHabitTrack } from "../utils/habit-calculations.util"
+import { isValidTrackChange } from "../utils/habit-validators.utils"
 
 @Injectable({
     providedIn: 'root'
 })
 export class HabitService implements OnDestroy {
-    private readonly API_URL = `${environment.apiUrl}/habits`
-    private readonly http = inject(HttpClient)
+    private readonly api = inject(HabitApiService)
+    private readonly state = inject(HabitStateService)
     private readonly destroy$ = new Subject<void>()
-    private readonly habits = new BehaviorSubject<Habit[]>([])
-    readonly habits$ = this.habits.asObservable()
+    private readonly trackChanges$ = new Subject<HabitTrackChange | null>()
 
-    private readonly trackChanges = new Subject<HabitTrackChange | null>()
+    readonly habits = this.state.habits
+    readonly loading = this.state.loading
+    readonly error = this.state.error
 
+    private isInitialized = false
 
     constructor() {
-        this.getAllHabits().subscribe()
-        this.trackChanges.pipe(
-            scan(
-                (a, v) => v == null ? [] : this.appendHabitTrackChange(a, v),
-                [] as HabitTrackChangeRequest[]
-            ),
-            debounceTime(1000),
-            takeUntil(this.destroy$)
-        ).subscribe((changes) => this.makeChangesRequests(changes))
-    }
-
-    private appendHabitTrackChange(acc: HabitTrackChangeRequest[], change: HabitTrackChange) {
-        const request = acc.find(r => this.isTargetRequest(r, change))
-        if (request) {
-            const currIncrement = request.dayUpdates.get(change.day) ?? 0
-            request.dayUpdates.set(change.day, currIncrement + change.increment)
-            return acc.map(r => this.isTargetRequest(r, change) ? request : r)
-        }
-        const dayUpdates = new Map<number, number>()
-        dayUpdates.set(change.day, change.increment)
-        const newRequest: HabitTrackChangeRequest = {
-            month: change.month,
-            year: change.year,
-            habitId: change.habitId,
-            dayUpdates
-        }
-        return acc.concat(newRequest)
-    }
-
-    private isTargetRequest(r: HabitTrackChangeRequest, change: HabitTrackChange) {
-        return r.habitId == change.habitId && r.month == change.month && r.year == change.year;
-    }
-
-    private makeChangesRequests(changes: HabitTrackChangeRequest[]) {
-        if (changes.length == 0) return;
-        this.trackChanges.next(null) // reset changes
-
-        for (var change of changes) {
-            const url = `${this.API_URL}/${change.habitId}/track/${change.year}/${change.month}/days/increment`
-
-            const body = {
-                dayUpdates: Object.fromEntries(change.dayUpdates)
-            }
-            this.http.patch(url, body).pipe(takeUntil(this.destroy$))
-                .subscribe({
-                    next: () => {
-                        console.log("success applying changes")
-                    },
-                    error: (err) => {
-                        console.log("error applying change", err, change)
-                    }
-                })
-        }
+        this.initializeTrackChangeHandler()
     }
 
     ngOnDestroy(): void {
         this.destroy$.next()
         this.destroy$.complete()
-        this.habits.complete()
-        this.readLoading.complete()
-        this.createLoading.complete()
-        this.trackChanges.complete()
     }
 
-    incrementTrack(change: HabitTrackChange) {
-        const { year, month, day, increment, habitId } = change
-        if (!this.isValidChange(change)) return 
+    private initializeTrackChangeHandler(): void {
+        this.trackChanges$.pipe(
+            scan(
+                (acc, value) => value === null 
+                    ? [] 
+                    : this.aggregateTrackChange(acc, value),
+                [] as HabitTrackChangeRequest[]
+            ),
+            debounceTime(1000),
+            takeUntil(this.destroy$)
+        ).subscribe(changes => this.syncTrackChanges(changes))
+    }
 
-        const currHabits = this.habits.value
-        const habit = currHabits.find(h => h.id == habitId)
-        if (habit == undefined) return
+    private aggregateTrackChange(
+        acc: HabitTrackChangeRequest[],
+        change: HabitTrackChange
+    ): HabitTrackChangeRequest[] {
+        const existingIndex = acc.findIndex(r =>
+            r.habitId === change.habitId &&
+            r.month === change.month &&
+            r.year === change.year
+        )
 
-        const targetTrack = habit.habitTracks?.find(t => t.month == change.month && t.year == change.year)
-        let newTrack = targetTrack
-        if (targetTrack) {
-            const newDays = [...targetTrack.days]
-            newDays[day] += increment
-            newTrack = { ...targetTrack, days: newDays }
-        } else {
-            const newDays: number[] = new Array(32).fill(0)
-            newDays[day] = increment
-            newTrack = {
-                month: change.month,
-                year: change.year,
-                days: newDays
-            }
+        if (existingIndex !== -1) {
+            const existing = acc[existingIndex]
+            const currentValue = existing.dayUpdates[change.day] ?? 0
+            existing.dayUpdates[change.day] = currentValue + change.increment
+            return acc
         }
 
-        const newHabit: Habit = {
-            ...habit,
-            habitTracks: habit.habitTracks
-                ?.map(t => t.month == newTrack.month && t.year == newTrack.year ? newTrack : t)
-        }
-        const newHabits = currHabits.map(h => h.id == newHabit.id ? newHabit : h)
-        this.habits.next(newHabits)
-
-        this.trackChanges.next(change)
+        return [...acc, {
+            habitId: change.habitId,
+            year: change.year,
+            month: change.month,
+            dayUpdates: { [change.day]: change.increment }
+        }]
     }
 
-    private isValidChange(change: HabitTrackChange) {
-        return change.day >= 1 && change.day <= 31 
-            && change.month > 0 && change.month <= 12 
-            && change.year > 2020 && change.increment != 0
+    private syncTrackChanges(changes: HabitTrackChangeRequest[]): void {
+        if (changes.length === 0) return
+
+        this.trackChanges$.next(null) // Reset
+
+        changes.forEach(change => {
+            this.api.incrementTrack(change).pipe(
+                catchError(error => {
+                    console.error('Failed to sync track changes:', error)
+                    // TODO: Implement rollback or retry logic
+                    return of(null)
+                }),
+                takeUntil(this.destroy$)
+            ).subscribe()
+        })
     }
 
-    private readLoading = new BehaviorSubject(false)
-    getReadLoadingObservable() {
-        return this.readLoading.asObservable()
+    initializeHabits() {
+        if (this.isInitialized) return EMPTY
+        return this.loadHabits()
     }
-    getAllHabits() {
-        if (this.readLoading.value) return EMPTY
 
-        this.readLoading.next(true)
+    loadHabits(): Observable<Habit[]> {
+        if (this.state.loading().read) return of(this.state.habits())
 
-        return this.http.get<Habit[]>(this.API_URL).pipe(
-            tap((data) => {
-                console.log("get all", data)
-                const d = this.habits.value
-                this.habits.next([...d, ...data])
+        this.state.setLoading('read', true)
+        this.state.setError(null)
+
+        return this.api.getAllHabits().pipe(
+            tap(habits => this.state.setHabits(habits)),
+            catchError(error => {
+                this.state.setError('Failed to load habits')
+                console.error('Error loading habits:', error)
+                return of([])
             }),
-            finalize(() => this.readLoading.next(false)),
+            finalize(() => this.state.setLoading('read', false)),
             takeUntil(this.destroy$)
         )
     }
 
-    private createLoading = new BehaviorSubject(false)
-    getCreateLoadingObservable() {
-        return this.createLoading.asObservable()
+    incrementTrack(change: HabitTrackChange): void {
+        if (!isValidTrackChange(change)) return
+        const habit = this.state.getHabitById(change.habitId)
+        if (!habit) return
+
+        // Optimistic update
+        const updatedTrack = applyChangeToHabitTrack(habit, change)
+        this.state.updateHabitTrack(habit.id, updatedTrack)
+
+        // Queue for sync
+        this.trackChanges$.next(change)
     }
+
     createHabit(request: CreateHabitRequest) {
-        if (this.createLoading.value) return EMPTY
+        if (this.state.loading().create) return EMPTY
 
-        this.createLoading.next(true)
+        this.state.setLoading('create', true)
+        this.state.setError(null)
 
-        return this.http.post<Habit>(this.API_URL, request).pipe(
-            tap((data) => {
-                const d = this.habits.value
-                this.habits.next([...d, data])
+        return this.api.createHabit(request).pipe(
+            tap(habit => this.state.addHabit(habit)),
+            catchError(error => {
+                this.state.setError('Failed to create habit')
+                console.error('Error creating habit:', error)
+                return of(null)
             }),
-            finalize(() => this.createLoading.next(false)),
+            finalize(() => this.state.setLoading('create', false)),
             takeUntil(this.destroy$)
         )
     }
 
-
-}
-
-interface HabitTrackChange {
-    habitId: string,
-    year: number,
-    month: number,
-    day: number,
-    increment: number
-}
-
-interface HabitTrackChangeRequest {
-    habitId: string,
-    year: number,
-    month: number,
-    dayUpdates: Map<number, number>
-}
-
-interface CreateHabitRequest {
-    name: string,
-    description: string | null,
-    color: string,
-    emoji: string,
-    target: number,
-    frequencyInDays: number,
-    allowCustomValue: boolean,
-    allowExceedTarget: boolean
 }

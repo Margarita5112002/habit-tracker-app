@@ -1,7 +1,7 @@
-import { Component, inject } from "@angular/core";
+import { Component, computed, inject } from "@angular/core";
 import { HabitService } from "../../habits/services/habit.service";
-import { toSignal } from "@angular/core/rxjs-interop";
 import { HabitCardComponent } from "../../habits/components/habit-card/habit-card.component";
+import { HabitStateService } from "../../habits/services/habit-state.service";
 
 @Component({
     selector: 'app-dashboard',
@@ -10,14 +10,12 @@ import { HabitCardComponent } from "../../habits/components/habit-card/habit-car
     imports: [HabitCardComponent]
 })
 export class DashboardComponent {
-    habitService = inject(HabitService)
-    habits = toSignal(this.habitService.habits$, {
-        initialValue: []
-    })
-    loading = toSignal(this.habitService.getReadLoadingObservable(), {
-        initialValue: true
-    })
+    habitsState = inject(HabitStateService)
+    habits = this.habitsState.habits
+    loading = computed(() => this.habitsState.loading().read)
 
-
+    constructor(habitService: HabitService) {
+        habitService.initializeHabits().subscribe()
+    }
 
 }

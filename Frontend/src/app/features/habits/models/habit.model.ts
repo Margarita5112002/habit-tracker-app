@@ -1,4 +1,4 @@
-import { HabitTrack } from "./habit-track";
+import { HabitTrack } from "./habit-track.model";
 
 export interface Habit {
     id: string,

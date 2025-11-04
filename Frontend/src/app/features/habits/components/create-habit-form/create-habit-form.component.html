@@ -1,1 +1,1 @@
-<app-habit-form (onCancel)="onCancel()" (onSubmitHabit)="onSubmit($event)" />
+<app-habit-form [disabled]="loading()" (onCancel)="onCancel()" (onSubmitHabit)="onSubmit($event)" />

@@ -1,7 +1,9 @@
-import { Component, inject } from "@angular/core";
-import { HabitFormComponent, HabitSubmitted } from "../habit-form/habit-form.component";
+import { Component, computed, inject } from "@angular/core";
+import { HabitFormComponent } from "../habit-form/habit-form.component";
 import { HabitService } from "../../services/habit.service";
 import { Router } from "@angular/router";
+import { Habit } from "../../models/habit.model";
+import { HabitStateService } from "../../services/habit-state.service";
 
 @Component({
     selector: 'app-create-habit-form',
@@ -11,12 +13,14 @@ import { Router } from "@angular/router";
 })
 export class CreateHabitFormComponent {
     habitService = inject(HabitService)
+    habitState = inject(HabitStateService)
     router = inject(Router)
 
-    onSubmit(habit: HabitSubmitted) {
+    loading = computed(() => this.habitState.loading().create)
+
+    onSubmit(habit: Omit<Habit, 'id'>) {
         this.habitService.createHabit({
-            ...habit,
-            frequencyInDays: habit.frequency
+            ...habit
         }).subscribe({
             next: data => {
                 this.router.navigate(['/'])
