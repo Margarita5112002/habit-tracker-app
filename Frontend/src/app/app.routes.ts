@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './guards/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -14,7 +14,7 @@ export const routes: Routes = [
             },
             {
                 path: 'create',
-                loadComponent: () => import('./features/habits/create-habit-form/create-habit-form.component')
+                loadComponent: () => import('./features/habits/components/create-habit-form/create-habit-form.component')
                     .then(c => c.CreateHabitFormComponent),
             }
         ]

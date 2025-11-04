@@ -1,6 +1,6 @@
 import { Component, inject } from "@angular/core";
 import { HabitFormComponent, HabitSubmitted } from "../habit-form/habit-form.component";
-import { HabitService } from "../../../services/habit.service";
+import { HabitService } from "../../services/habit.service";
 import { Router } from "@angular/router";
 
 @Component({

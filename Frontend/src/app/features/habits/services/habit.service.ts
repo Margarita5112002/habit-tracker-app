@@ -1,8 +1,8 @@
 import { inject, Injectable, OnDestroy } from "@angular/core";
 import { BehaviorSubject, debounceTime, EMPTY, finalize, scan, Subject, takeUntil, tap } from "rxjs";
-import { environment } from "../../environments/environment";
+import { environment } from "../../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
-import { Habit } from "../shared/models/habit";
+import { Habit } from "../models/habit";
 
 @Injectable({
     providedIn: 'root'

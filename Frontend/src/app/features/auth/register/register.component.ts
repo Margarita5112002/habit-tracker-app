@@ -2,7 +2,7 @@ import { Component, inject } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { AuthService } from "../../../services/auth.service";
+import { AuthService } from "../../../core/services/auth.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { toSignal } from "@angular/core/rxjs-interop";
 
@@ -70,10 +70,10 @@ export class RegisterComponent {
             this.authService.register({
                 username: username,
                 email: email,
-                password: this.registerForm.value.username ?? ""
+                password: this.registerForm.value.password ?? ""
             }).subscribe({
                 next: data => {
-                    this.router.navigate(['/'])
+                    this.router.navigate(['/', 'login'])
                 },
                 error: err => {
                     if (err instanceof HttpErrorResponse &&

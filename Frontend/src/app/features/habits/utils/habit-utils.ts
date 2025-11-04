@@ -1,5 +1,5 @@
-import { Habit } from "./habit";
-import { HabitTrack } from "./habit-track";
+import { Habit } from "../models/habit"
+import { HabitTrack } from "../models/habit-track"
 
 export const getCompletionPercentage = (habit: Habit) => {
     const freq = habit.frequencyInDays

@@ -2,7 +2,7 @@ import { Component, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
-import { AuthService } from "../../../services/auth.service";
+import { AuthService } from "../../../core/services/auth.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { toSignal } from "@angular/core/rxjs-interop";
 

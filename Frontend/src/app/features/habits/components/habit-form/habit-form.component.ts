@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, inject, output } from "@angular/core";
-import { EmojiPickerComponent } from "../../../shared/emoji-picker/emoji-picker.component";
-import { ColorPickerComponent } from "../../../shared/color-picker/color-picker.component";
+import { EmojiPickerComponent } from "../../../../shared/emoji-picker/emoji-picker.component";
+import { ColorPickerComponent } from "../../../../shared/color-picker/color-picker.component";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { SwitchComponent } from "../../../shared/switch/switch.component";
+import { SwitchComponent } from "../../../../shared/switch/switch.component";
 
 @Component({
     selector: 'app-habit-form',

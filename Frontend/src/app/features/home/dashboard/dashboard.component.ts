@@ -1,7 +1,7 @@
 import { Component, inject } from "@angular/core";
-import { HabitService } from "../../../services/habit.service";
+import { HabitService } from "../../habits/services/habit.service";
 import { toSignal } from "@angular/core/rxjs-interop";
-import { HabitCardComponent } from "../../habits/habit-card/habit-card.component";
+import { HabitCardComponent } from "../../habits/components/habit-card/habit-card.component";
 
 @Component({
     selector: 'app-dashboard',

@@ -1,9 +1,9 @@
 import { Component, computed, inject, input } from "@angular/core";
-import { Habit } from "../../../shared/models/habit";
 import { NgStyle } from "@angular/common";
-import { CircularProgressBarComponent } from "../../../shared/circular-progress-bar/circular-progress-bar.component";
-import { HabitService } from "../../../services/habit.service";
-import { getCompletionPercentage } from "../../../shared/models/habit-utils";
+import { CircularProgressBarComponent } from "../../../../shared/circular-progress-bar/circular-progress-bar.component";
+import { HabitService } from "../../services/habit.service";
+import { getCompletionPercentage } from "../../utils/habit-utils";
+import { Habit } from "../../models/habit";
 
 @Component({
     selector: 'app-habit-card',
