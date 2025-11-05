@@ -4,10 +4,10 @@ import { Habit } from "../models/habit.model"
 import { addDays, startOfDay } from "./date.utils"
 
 export const applyChangeToHabitTrack = (
-    habit: Habit,
+    tracks: HabitTrack[] | undefined,
     change: HabitTrackChange
 ): HabitTrack => {
-    const tracks = habit.habitTracks ?? []
+    tracks ??= []
     const existingTrack = tracks.find(
         t => t.month === change.month && t.year === change.year
     )
@@ -27,20 +27,21 @@ export const applyChangeToHabitTrack = (
     }
 }
 
-export function calculateCompletionPercentage(habit: Habit): number {
+export function calculateCompletionPercentage(habit: Habit, from: Date): number {
     const { frequencyInDays, target } = habit
     const habitTracks = habit.habitTracks ?? []
-    const completions = getCompletionsInLastDays(habitTracks, frequencyInDays)
+    const completions = getCompletionsInLastDays(habitTracks, from, frequencyInDays)
     return (completions / target) * 100
 }
 
 export function getCompletionsInLastDays(
     tracks: HabitTrack[],
+    from: Date,
     ndays: number
 ): number {
     if (ndays <= 0 || tracks.length === 0) return 0
 
-    const today = startOfDay(new Date())
+    const today = startOfDay(from)
     const startDate = addDays(today, -(ndays - 1))
 
     let total = 0

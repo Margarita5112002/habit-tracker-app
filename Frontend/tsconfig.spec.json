@@ -4,8 +4,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
+    "module": "es2022",
     "types": [
-      "jasmine"
+      "jest"
     ]
   },
   "include": [

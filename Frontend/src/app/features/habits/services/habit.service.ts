@@ -116,7 +116,7 @@ export class HabitService implements OnDestroy {
         if (!habit) return
 
         // Optimistic update
-        const updatedTrack = applyChangeToHabitTrack(habit, change)
+        const updatedTrack = applyChangeToHabitTrack(habit.habitTracks, change)
         this.state.updateHabitTrack(habit.id, updatedTrack)
 
         // Queue for sync
