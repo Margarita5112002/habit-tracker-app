@@ -34,6 +34,42 @@ export function calculateCompletionPercentage(habit: Habit, from: Date): number 
     return (completions / target) * 100
 }
 
+export function getLastDays(
+    tracks: HabitTrack[],
+    from: Date,
+    ndays: number
+): number[] {
+    if (ndays <= 0) return []
+    if (tracks.length === 0) return new Array(ndays).fill(0)
+
+    const startDate = startOfDay(from)
+    const endDate = addDays(startDate, -ndays)
+    let iterDate = new Date(startDate)
+    let n = 0
+    let days: number[] = []
+
+    while (iterDate > endDate) {
+        const relevantTrack = tracks.find(
+            t => t.month === iterDate.getMonth() + 1
+                && t.year === iterDate.getFullYear()
+        )
+        const take = ndays - n >= iterDate.getDate() ? iterDate.getDate() : ndays - n
+        n += take
+        if (!relevantTrack) {
+            days = days.concat(new Array(take).fill(0))
+        } else {
+            const end = iterDate.getDate() + 1
+            const start = end - take
+            const newDays = relevantTrack.days.slice(start, end)
+            newDays.reverse()
+            days = days.concat(newDays)
+        }
+        iterDate = addDays(iterDate, -take)
+    }
+    
+    return days
+}
+
 export function getCompletionsInLastDays(
     tracks: HabitTrack[],
     from: Date,

@@ -4,22 +4,20 @@ import { CircularProgressBarComponent } from "../../../../shared/circular-progre
 import { HabitService } from "../../services/habit.service";
 import { Habit } from "../../models/habit.model";
 import { calculateCompletionPercentage } from "../../utils/habit-calculations.util";
+import { HabitProgressGraphComponent } from "../habit-progress-graph/habit-progress-graph.component";
 
 @Component({
     selector: 'app-habit-card',
     templateUrl: './habit-card.component.html',
     styleUrl: './habit-card.component.css',
-    imports: [NgStyle, CircularProgressBarComponent]
+    imports: [NgStyle, CircularProgressBarComponent, HabitProgressGraphComponent]
 })
 export class HabitCardComponent {
     habitService = inject(HabitService)
     habit = input.required<Habit>()
 
-    totalIncrements = computed(() => 
-        this.habit().habitTracks?.reduce((p, c) => p + c.days.reduce((pd, cd) => pd + cd), 0) ?? 0
-    )
     percentage = computed(() => {
-        return calculateCompletionPercentage(this.habit())
+        return calculateCompletionPercentage(this.habit(), new Date())
     })
     styles = computed(() => {
         return {

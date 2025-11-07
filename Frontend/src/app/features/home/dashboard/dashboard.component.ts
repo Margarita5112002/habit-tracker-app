@@ -11,7 +11,8 @@ import { HabitStateService } from "../../habits/services/habit-state.service";
 })
 export class DashboardComponent {
     habitsState = inject(HabitStateService)
-    habits = this.habitsState.habits
+    
+    habits = computed(() => this.habitsState.habits())
     loading = computed(() => this.habitsState.loading().read)
 
     constructor(habitService: HabitService) {

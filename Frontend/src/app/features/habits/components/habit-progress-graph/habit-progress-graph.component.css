@@ -1,0 +1,12 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(53, minmax(10px, 1fr));
+    gap: 3px;
+    min-width: calc(10px * 53);
+    min-height: calc(10px * 7);
+}
+
+.node {
+    aspect-ratio: 1 / 1;
+    border-radius: 3px;
+}

@@ -1,7 +1,7 @@
 .container {
     display: flex;
     flex-flow: column nowrap;
-    gap: 5px;
+    gap: 10px;
     padding: 20px;
     border-radius: 8px;
     background-color: var(--primary-white);
@@ -55,4 +55,8 @@
 .info-desc {
     font-size: 0.8rem;
     margin-top: 5px;
+}
+
+.habit-graph-container {
+    overflow: scroll;
 }

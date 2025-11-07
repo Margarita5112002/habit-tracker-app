@@ -1,0 +1,6 @@
+<div class="container">
+    @for (day of days(); track $index) {
+        <span class="node" [style.backgroundColor]="getColorForNote(day)"></span>
+    }
+
+</div>

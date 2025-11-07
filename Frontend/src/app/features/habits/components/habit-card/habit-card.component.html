@@ -14,5 +14,7 @@
                 [percent]="percentage()" />
         </button>
     </div>
-    <div>GRAPH PLACEHOLDER. total {{totalIncrements()}} percent {{percentage()}}</div>
+    <div class="habit-graph-container">
+        <app-habit-progress-component [habit]="habit()" />
+    </div>
 </div>

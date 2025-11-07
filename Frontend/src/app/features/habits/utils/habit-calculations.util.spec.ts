@@ -1,7 +1,7 @@
 import { HabitTrackChange } from "../models/habit-track-change.model"
 import { HabitTrack } from "../models/habit-track.model"
 import { Habit } from "../models/habit.model"
-import { applyChangeToHabitTrack, calculateCompletionPercentage, getCompletionsInLastDays } from "./habit-calculations.util"
+import { applyChangeToHabitTrack, calculateCompletionPercentage, getCompletionsInLastDays, getLastDays } from "./habit-calculations.util"
 
 describe('habit calculations', () => {
     describe('applyChangeToHabitTrack', () => {
@@ -240,7 +240,7 @@ describe('habit calculations', () => {
             const from = new Date(2022, 2, 5)
             const ndays = 50
 
-            expect(getCompletionsInLastDays(tracks, from, ndays)).toEqual(5 + 28*2 + 17*3)
+            expect(getCompletionsInLastDays(tracks, from, ndays)).toEqual(5 + 28 * 2 + 17 * 3)
         })
 
         it('there is no relevant habit track return zero', () => {
@@ -311,7 +311,7 @@ describe('habit calculations', () => {
             const from = new Date(2024, 2, 1)
             const ndays = 30
 
-            expect(getCompletionsInLastDays(tracks, from, ndays)).toEqual(1 + 29*2)
+            expect(getCompletionsInLastDays(tracks, from, ndays)).toEqual(1 + 29 * 2)
         })
     })
 
@@ -345,9 +345,9 @@ describe('habit calculations', () => {
             }
             const from = new Date(2022, 5, 20)
 
-            expect(calculateCompletionPercentage(habit as Habit, from)).toEqual((10/30) * 100)
+            expect(calculateCompletionPercentage(habit as Habit, from)).toEqual((10 / 30) * 100)
         })
-        
+
         it('no progress done return zero', () => {
             const tracks: HabitTrack[] = [{
                 month: 6,
@@ -378,6 +378,139 @@ describe('habit calculations', () => {
             const from = new Date(2022, 5, 20)
 
             expect(calculateCompletionPercentage(habit as Habit, from)).toEqual(200)
+        })
+    })
+
+    describe('getLastDays', () => {
+        it('ndays equal zero return empty days', () => {
+            const tracks: HabitTrack[] = [{
+                month: 4,
+                year: 2024,
+                days: new Array(32).fill(4) //30
+            }]
+            const ndays = 0
+            const from = new Date(2024, 3, 10)
+
+            expect(getLastDays(tracks, from, ndays)).toEqual([])
+        })
+
+        it('tracks is empty return ndays zeros', () => {
+            const tracks: HabitTrack[] = []
+            const ndays = 10
+            const from = new Date(2024, 3, 10)
+
+            const result = new Array(ndays).fill(0)
+
+            expect(getLastDays(tracks, from, ndays)).toEqual(result)
+        })
+
+        it('return last ndays from tracks', () => {
+            const tracks: HabitTrack[] = [{
+                month: 5,
+                year: 2024,
+                days: new Array(32).fill(2)
+            }]
+            const ndays = 6
+            const from = new Date(2024, 4, 18)
+
+            const result = new Array(ndays).fill(2)
+
+            expect(getLastDays(tracks, from, ndays)).toEqual(result)
+        })
+
+        it('return last ndays from tracks across multiple habit tracks', () => {
+             const tracks: HabitTrack[] = [{
+                month: 3,
+                year: 2024,
+                days: new Array(32).fill(2)
+            },
+            {
+                month: 2,
+                year: 2024,
+                days: new Array(32).fill(3) //29
+            },
+            {
+                month: 1,
+                year: 2024,
+                days: new Array(32).fill(1)
+            }]
+            const ndays = 40
+            const from = new Date(2024, 2, 3)
+
+            const part1 = new Array(3).fill(2)
+            const part2 = new Array(29).fill(3)
+            const part3 = new Array(8).fill(1)
+            const result = [...part1, ...part2, ...part3]
+
+            expect(getLastDays(tracks, from, ndays)).toEqual(result)
+        })
+
+        it('return last ndays from tracks and fill gaps', () => {
+            const tracks: HabitTrack[] = [{
+                month: 3,
+                year: 2022,
+                days: new Array(32).fill(3)
+            },
+            {
+                month: 1,
+                year: 2022,
+                days: new Array(32).fill(1)
+            }]
+            const ndays = 40
+            const from = new Date(2022, 2, 7)
+
+            const part1 = new Array(7).fill(3)
+            const part2 = new Array(28).fill(0)
+            const part3 = new Array(5).fill(1)
+            const result = [...part1, ...part2, ...part3]
+
+            expect(getLastDays(tracks, from, ndays)).toEqual(result)
+        })
+
+        it('return last ndays from tracks and fill gaps at start', () => {
+            const tracks: HabitTrack[] = [{
+                month: 6,
+                year: 2024,
+                days: new Array(32).fill(2)
+            }]
+            const ndays = 10
+            const from = new Date(2024, 6, 7)
+
+            const part1 = new Array(7).fill(0)
+            const part2 = new Array(3).fill(2)
+            const result = [...part1, ...part2]
+
+            expect(getLastDays(tracks, from, ndays)).toEqual(result)
+        })
+
+        it('return last ndays from tracks and fill gaps at end', () => {
+            const tracks: HabitTrack[] = [{
+                month: 9,
+                year: 2020,
+                days: new Array(32).fill(1)
+            }]
+            const ndays = 7
+            const from = new Date(2020, 8, 4)
+
+            const part1 = new Array(4).fill(1)
+            const part2 = new Array(3).fill(0)
+            const result = [...part1, ...part2]
+
+            expect(getLastDays(tracks, from, ndays)).toEqual(result)
+        })
+
+        it('return ndays zeros if no tracks are relevant', () => {
+            const tracks: HabitTrack[] = [{
+                month: 11,
+                year: 2025,
+                days: new Array(32).fill(3)
+            }]
+            const ndays = 14
+            const from = new Date(2025, 9, 5)
+
+            const result = new Array(ndays).fill(0)
+
+            expect(getLastDays(tracks, from, ndays)).toEqual(result)
         })
     })
 })
