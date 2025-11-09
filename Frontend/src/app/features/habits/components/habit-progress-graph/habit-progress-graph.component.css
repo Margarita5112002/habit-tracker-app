@@ -1,6 +1,7 @@
 .container {
     display: grid;
-    grid-template-columns: repeat(53, minmax(10px, 1fr));
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, minmax(10px, 1fr));
     gap: 3px;
     min-width: calc(10px * 53);
     min-height: calc(10px * 7);

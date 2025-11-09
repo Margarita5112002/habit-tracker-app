@@ -10,17 +10,10 @@ export function addDays(date: Date, days: number): Date {
     return result
 }
 
-export function getCurrentDateParts(): DateParts {
-    const now = new Date()
-    return {
-        day: now.getDate(),
-        month: now.getMonth() + 1,
-        year: now.getFullYear()
-    }
-}
+export function formatDate(date: Date): string {
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = date.toLocaleString('en-US', { month: 'short' })
+    const year = date.getFullYear()
 
-interface DateParts {
-    day: number
-    month: number
-    year: number
+    return `${day} ${month}, ${year}`
 }
