@@ -1,7 +1,7 @@
 import { HabitTrackChange } from "../models/habit-track-change.model"
 import { HabitTrack } from "../models/habit-track.model"
 import { Habit } from "../models/habit.model"
-import { applyChangeToHabitTrack, calculateCompletionPercentage, getCompletionsInLastDays, getLastDays } from "./habit-calculations.util"
+import { applyChangeToHabitTrack, calculateCompletionPercentage, getCompletionsInLastDays, getCompletionsOnDate, getLastDays } from "./habit-calculations.util"
 
 describe('habit calculations', () => {
     describe('applyChangeToHabitTrack', () => {
@@ -419,7 +419,7 @@ describe('habit calculations', () => {
         })
 
         it('return last ndays from tracks across multiple habit tracks', () => {
-             const tracks: HabitTrack[] = [{
+            const tracks: HabitTrack[] = [{
                 month: 3,
                 year: 2024,
                 days: new Array(32).fill(2)
@@ -511,6 +511,62 @@ describe('habit calculations', () => {
             const result = new Array(ndays).fill(0)
 
             expect(getLastDays(tracks, from, ndays)).toEqual(result)
+        })
+    })
+
+    describe('getCompletionsOnDate', () => {
+        it('empty tracks return zero', () => {
+            const tracks: HabitTrack[] = []
+            const date = new Date(2025, 11, 5)
+            expect(getCompletionsOnDate(tracks, date)).toEqual(0)
+        })
+
+        it('return completions on the given date', () => {
+            const tracks: HabitTrack[] = [{
+                month: 11,
+                days: new Array(32).fill(5),
+                year: 2025
+            }]
+            tracks[0].days[5] = 3
+            const date = new Date(2025, 10, 5)
+            expect(getCompletionsOnDate(tracks, date)).toEqual(3)
+        })
+
+        it('multiple tracks return completions on the given date', () => {
+            const tracks: HabitTrack[] = [{
+                month: 11,
+                days: new Array(32).fill(5),
+                year: 2025
+            }, {
+                month: 10,
+                days: new Array(32).fill(4),
+                year: 2025
+            }, {
+                month: 9,
+                days: new Array(32).fill(3),
+                year: 2025
+            }]
+            tracks[1].days[31] = 10
+            const date = new Date(2025, 9, 31)
+            expect(getCompletionsOnDate(tracks, date)).toEqual(10)
+        })
+
+        it('multiple tracks but no date match return zero', () => {
+            const tracks: HabitTrack[] = [{
+                month: 11,
+                days: new Array(32).fill(5),
+                year: 2025
+            }, {
+                month: 10,
+                days: new Array(32).fill(4),
+                year: 2025
+            }, {
+                month: 9,
+                days: new Array(32).fill(3),
+                year: 2025
+            }]
+            const date = new Date(2024, 9, 31)
+            expect(getCompletionsOnDate(tracks, date)).toEqual(0)
         })
     })
 })

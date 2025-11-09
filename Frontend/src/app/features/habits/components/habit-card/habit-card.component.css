@@ -66,6 +66,12 @@
     margin-top: 5px;
 }
 
+.info-today {
+    font-size: 0.8rem;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
 .habit-graph-container {
     overflow: scroll;
 }

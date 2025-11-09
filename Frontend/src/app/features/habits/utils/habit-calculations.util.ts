@@ -3,10 +3,10 @@ import { HabitTrack } from "../models/habit-track.model"
 import { Habit } from "../models/habit.model"
 import { addDays, startOfDay } from "./date.utils"
 
-export const applyChangeToHabitTrack = (
+export function applyChangeToHabitTrack(
     tracks: HabitTrack[] | undefined,
     change: HabitTrackChange
-): HabitTrack => {
+): HabitTrack {
     tracks ??= []
     const existingTrack = tracks.find(
         t => t.month === change.month && t.year === change.year
@@ -68,6 +68,15 @@ export function getLastDays(
     }
     
     return days
+}
+
+export function getCompletionsOnDate(tracks: HabitTrack[], date: Date): number {
+    for(const track of tracks) {
+        if (track.month - 1 == date.getMonth() && track.year == date.getFullYear())
+            return track.days[date.getDate()]
+    }
+    
+    return 0
 }
 
 export function getCompletionsInLastDays(
