@@ -1,20 +1,35 @@
 <div class="container">
-    <div class="header">
-        <div class="emoji-box" [ngStyle]="styles()">
-            <span class="emoji">{{habit().emoji}}</span>
-        </div>
-        <div class="info">
-            <p class="info-name">{{habit().name}}</p>
-            <p class="info-desc">{{habit().description}}</p>
-        </div>
-        <button (click)="onIncrementClick()" type="button" class="edit-track">
-            <app-circular-progress-bar
-                [circleColor]="this.getVariantColor('60')"
-                [backgroundColor]="getVariantColor('40')"
-                [percent]="percentage()" />
-        </button>
+  <div class="header">
+    <div class="emoji-box" [ngStyle]="styles()">
+      <span class="emoji">{{ habit().emoji }}</span>
     </div>
-    <div class="habit-graph-container">
-        <app-habit-progress-component [habit]="habit()" />
+    <div class="info">
+      <p class="info-name">{{ habit().name }}</p>
+      <p class="info-desc">{{ habit().description }}</p>
     </div>
+    @if (isCompleted()) {
+    <button 
+        title="you reach your target"
+        (click)="onCompleteClick()" 
+        type="button" 
+        class="check-btn reset-track"
+        [style.backgroundColor]="habit().color">
+        ✔
+    </button>
+    } @else {
+    <button 
+        (click)="onIncrementClick()" 
+        type="button" 
+        class="check-btn edit-track">
+      <app-circular-progress-bar
+        [circleColor]="getVariantColor('60')"
+        [backgroundColor]="getVariantColor('40')"
+        [percent]="percentage()"
+      />
+    </button>
+    }
+  </div>
+  <div class="habit-graph-container">
+    <app-habit-progress-component [habit]="habit()" />
+  </div>
 </div>

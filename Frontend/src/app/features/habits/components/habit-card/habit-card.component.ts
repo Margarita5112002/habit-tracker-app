@@ -19,6 +19,7 @@ export class HabitCardComponent {
     percentage = computed(() => {
         return calculateCompletionPercentage(this.habit(), new Date())
     })
+    isCompleted = computed(() => this.percentage() >= 100)
     styles = computed(() => {
         return {
             'background-color': this.getVariantColor("20"),
@@ -29,12 +30,23 @@ export class HabitCardComponent {
         return this.habit().color + str
     }
 
-    onIncrementClick() {
+    private increment(increment: number) {
         const d = new Date()
         const day = d.getDate()
         const month = d.getMonth() + 1
         const year = d.getFullYear()
-        this.habitService.incrementTrack({habitId: this.habit().id, year, month, day, increment: 1})
+        this.habitService.incrementTrack({habitId: this.habit().id, year, month, day, increment})
+    
+    }
+
+    onIncrementClick() {
+        this.increment(1)
+    }
+    
+    onCompleteClick() {
+        if(this.habit().allowExceedTarget) {
+           this.increment(1)
+        }
     }
 
 }

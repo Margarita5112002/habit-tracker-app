@@ -1,8 +1,6 @@
 import { Component, computed, input } from "@angular/core";
-import { HabitTrack } from "../../models/habit-track.model";
 import { getLastDays } from "../../utils/habit-calculations.util";
 import { getColorWithOpacity } from "../../utils/color.util";
-import { NgStyle } from "@angular/common";
 import { Habit } from "../../models/habit.model";
 
 @Component({

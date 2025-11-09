@@ -28,7 +28,7 @@
     font-size: clamp(1rem, 5dvw + 0.1rem, 35px);
 }
 
-.edit-track {
+.check-btn {
     cursor: pointer;
     width: clamp(32px, 20%, 56px);
     border: none;
@@ -40,7 +40,16 @@
     align-items: center;
     justify-content: center;
     margin-left: 10px;
+}
 
+.edit-track {
+}
+
+.reset-track {
+    aspect-ratio: 1 / 1;
+    outline: none;
+    font-weight: bold;
+    color: var(--primary-white);
 }
 
 .info {
