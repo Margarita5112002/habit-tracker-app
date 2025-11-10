@@ -1,5 +1,5 @@
 import { NgStyle } from "@angular/common";
-import { Component, computed, forwardRef, input, model, output } from "@angular/core";
+import { Component, computed, effect, forwardRef, input, model, output } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
@@ -18,6 +18,7 @@ export class CustomValueInputComponent implements ControlValueAccessor {
 
     title = input('title')
     target = input(10)
+    min = input(0)
     progressColor = input("#aa0000")
     allowExceedTarget = input(true)
     value = model(0)
@@ -26,7 +27,7 @@ export class CustomValueInputComponent implements ControlValueAccessor {
     onCloseClick = output()
 
     progress = computed(() => {
-        const percentage = Math.round((this.value()/this.target()) * 100)
+        const percentage = Math.round((this.value() / this.target()) * 100)
         return percentage > 100 ? 100 : percentage
     })
     progressStyle = computed(() => {
@@ -48,7 +49,21 @@ export class CustomValueInputComponent implements ControlValueAccessor {
     private onTouched = () => { }
 
     constructor() {
-        this.value.subscribe(v => this.onChange(v))
+        effect(() => {
+            this.onChange(this.value())
+        })
+    }
+
+    private changeValue(newval: number) {
+        if (!this.allowExceedTarget() && newval > this.target()) {
+            this.value.set(this.target())
+            return
+        }
+        if (newval < this.min()) {
+            this.value.set(this.min())
+            return
+        }
+        this.value.set(newval)
     }
 
     onModalClick(event: MouseEvent) {
@@ -67,26 +82,18 @@ export class CustomValueInputComponent implements ControlValueAccessor {
         const step = this.stepAmount()
         const val = this.value()
         const newval = Number(val) + Number(step)
-        if (newval > this.target() && !this.allowExceedTarget()) {
-            this.value.set(this.target())
-            return
-        }
-        this.value.set(newval)
+        this.changeValue(newval)
     }
 
     minus() {
         const step = this.stepAmount()
         const val = this.value()
         const newval = Number(val) - Number(step)
-        if (newval < 0) {
-            this.value.set(0)
-            return
-        }
-        this.value.set(newval)
+        this.changeValue(newval)
     }
 
     reset() {
-        this.value.set(0)
+        this.value.set(this.min())
     }
 
     fillDay() {
@@ -95,7 +102,7 @@ export class CustomValueInputComponent implements ControlValueAccessor {
 
     /* control value accessor methods */
     writeValue(obj: number): void {
-        this.value.set(obj)
+        this.changeValue(obj)
     }
     registerOnChange(fn: (value: number) => {}): void {
         this.onChange = fn

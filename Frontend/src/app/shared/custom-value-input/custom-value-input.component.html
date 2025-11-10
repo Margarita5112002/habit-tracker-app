@@ -17,7 +17,7 @@
     <div class="input-box">
       <button (click)="minus()" class="input-box__btn" type="button" id="btnMinus">-</button>
       <div class="input_box__input">
-        <input [(ngModel)]="value" id="customValue" type="number" min="0" />
+        <input [(ngModel)]="value" id="customValue" type="number" [min]="min()" />
         <span>/ {{ target() }}</span>
       </div>
       <button (click)="plus()" class="input-box__btn" type="button" id="btnPlus">+</button>

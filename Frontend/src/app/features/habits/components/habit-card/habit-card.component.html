@@ -36,10 +36,11 @@
     <app-habit-progress-component [habit]="habit()" />
   </div>
 </div>
-@if (customValueInputOpen) {
+@if (customValueInputOpen()) {
 <app-custom-value-input
   [title]="customValueInputTitle()"
-  [target]="habit().target"
+  [target]="leftToDoToday()"
+  [min]="0"
   [(ngModel)]="customValue"
   [progressColor]="habit().color"
   [allowExceedTarget]="habit().allowExceedTarget"

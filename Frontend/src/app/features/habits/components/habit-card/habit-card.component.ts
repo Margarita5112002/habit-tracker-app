@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from "@angular/core";
+import { Component, computed, inject, input, signal } from "@angular/core";
 import { formatDate, NgStyle } from "@angular/common";
 import { CircularProgressBarComponent } from "../../../../shared/circular-progress-bar/circular-progress-bar.component";
 import { HabitService } from "../../services/habit.service";
@@ -30,11 +30,25 @@ export class HabitCardComponent {
     })
     tracks = computed(() => this.habit().habitTracks ?? [])
     completionsToday = computed(() => getCompletionsOnDate(this.tracks(), this.today))
-    todaySummary = computed(() => {
-        const target = this.habit().target
+    completionsDone = computed(() => {
         const freq = this.habit().frequencyInDays
-        const completionsDone = getCompletionsInLastDays(this.tracks(), this.today, freq)
-        const left = completionsDone >= target ? 0 : target - completionsDone
+        return getCompletionsInLastDays(this.tracks(), this.today, freq)
+    })
+    completionsDoneNotToday = computed(() => 
+        this.completionsDone() - this.completionsToday())
+    leftToDo = computed(() => {
+        const target = this.habit().target
+        const done = this.completionsDone()
+        return done >= target ? 0 : target - done
+    })
+    leftToDoToday = computed(() => {
+        const target = this.habit().target
+        const done = this.completionsDoneNotToday()
+        return done >= target ? 0 : target - done
+    })
+    todaySummary = computed(() => {
+        const freq = this.habit().frequencyInDays
+        const left = this.leftToDo()
         let days = ""
         if (left == 0) {
             days = "All done for "
@@ -64,29 +78,42 @@ export class HabitCardComponent {
         }
     })
 
-    customValueInputOpen = false
+    customValueInputOpen = signal(false)
     customValueInputTitle = computed(() => {
-        const date = formatDate(this.today, "dd MMM, yyyy", 'en-US')
         const name = this.habit().name
-        return `${name}, ${date}`
+        const date = formatDate(this.today, "dd MMM, yyyy", 'en-US')
+
+        return `${name}, ${date}. how much completions have you done today?`
     })
-    customValue = 0
+    customValue = signal(0)
 
     getVariantColor(str: string) {
         return this.habit().color + str
     }
 
     private openCustomValueInput() {
-        this.customValue = this.completionsToday()
-        this.customValueInputOpen = true
+        this.customValue.set(this.completionsToday())
+        this.customValueInputOpen.set(true)
     }
 
     onCustomValueInputClose() {
-        this.customValueInputOpen = false
-        if (this.customValue < 0) return
-        const currval = this.completionsToday()
-        if (currval == this.customValue) return
-        this.increment(this.customValue - currval)
+        const allowExceedTarget = this.habit().allowExceedTarget
+        const target = this.habit().target
+        const done = this.completionsDoneNotToday()
+        const doneToday = this.completionsToday()
+        this.customValueInputOpen.set(false)
+
+        if (doneToday == this.customValue()) return
+
+        if (!allowExceedTarget && this.customValue() + done > target) {
+            this.increment(target - done)
+        } else if (this.customValue() < 0) {
+            this.increment(0 - doneToday)
+        } else {
+            this.increment(this.customValue() - doneToday)
+        }
+
+
     }
 
     private increment(increment: number) {
