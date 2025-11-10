@@ -1,0 +1,187 @@
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s;
+}
+
+.content {
+  background-color: var(--primary-white);
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.3s;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.header__close {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #aaa;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.header__close:hover {
+  color: #000;
+}
+
+.progress-bar {
+  width: 100%;
+  border-radius: 6px;
+  height: 20px;
+  outline: 1px #ccc solid;
+}
+
+.progress-bar__progress {
+  border-radius: 6px;
+  height: 100%;
+}
+
+.input-box {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 10px;
+}
+
+.input-box__btn {
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.input-box__btn:hover {
+  box-shadow: none;
+}
+
+.input_box__input {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  outline: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  flex: 1;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+  
+}
+
+.input_box__input input {
+  border: none;
+  outline: none;
+  background: none;
+  width: 6ch;
+}
+
+.step-amount-group__radios {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.step-amount-group {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+  background: none;
+  outline: 1px solid #ccc;
+  border-radius: 6px;
+  position: relative;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+
+}
+
+.step-amount-group label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 10;
+  outline: 1px solid #ccc;
+  padding-block: 8px;
+}
+
+.chip {
+  background-color: var(--primary-light-pink);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+
+  border-radius: 6px;
+  position: absolute;
+  top: 0%;
+  height: 100%;
+  width: 20%;
+  transition: 0.3s all ease-in-out;
+}
+
+.border-radius-right {
+  border-radius: 0px 6px 6px 0px;
+}
+
+.border-radius-left {
+  border-radius: 6px 0px 0px 6px;
+}
+
+.buttons {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+}
+
+.buttons button {
+    flex: 1;
+    margin: 8px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,45 @@
+<div (click)="onModalClick($event)" class="modal">
+  <div class="content">
+    <div class="header">
+      <h2>{{ title() }}</h2>
+      <button
+        (click)="close()"
+        class="header__close"
+        type="button"
+        id="btnClose"
+      >
+        &times;
+      </button>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-bar__progress" [ngStyle]="progressStyle()"></div>
+    </div>
+    <div class="input-box">
+      <button (click)="minus()" class="input-box__btn" type="button" id="btnMinus">-</button>
+      <div class="input_box__input">
+        <input [(ngModel)]="value" id="customValue" type="number" min="0" />
+        <span>/ {{ target() }}</span>
+      </div>
+      <button (click)="plus()" class="input-box__btn" type="button" id="btnPlus">+</button>
+    </div>
+    <div class="step-amount-group__radios">
+      <input [(ngModel)]="stepAmount" type="radio" id="byOneStep" name="step-amount" value="1"/>
+      <input [(ngModel)]="stepAmount"  type="radio" id="byFiveStep" name="step-amount" value="5" />
+      <input [(ngModel)]="stepAmount"  type="radio" id="byTenStep" name="step-amount" value="10" />
+      <input [(ngModel)]="stepAmount"  type="radio" id="byFiftyStep" name="step-amount" value="50" />
+      <input [(ngModel)]="stepAmount"  type="radio" id="byHundredStep" name="step-amount" value="100" />
+    </div>
+    <div class="step-amount-group">
+        <label class="border-radius-left" for="byOneStep">1</label>
+        <label for="byFiveStep">5</label>
+        <label for="byTenStep">10</label>
+        <label for="byFiftyStep">50</label>
+        <label class="border-radius-right" for="byHundredStep">100</label>
+        <span class="chip" [ngStyle]="chipStyle()"></span>
+    </div>
+    <div class="buttons">
+      <button (click)="reset()" class="btn" id="btnReset" type="button">Reset</button>
+      <button (click)="fillDay()" class="btn" id="btnFillDay" type="button">Fill Day</button>
+    </div>
+  </div>
+</div>

@@ -6,22 +6,24 @@
     <div class="info">
       <p class="info-name">{{ habit().name }}</p>
       <p class="info-desc">{{ habit().description }}</p>
-      <p class="info-today">{{todaySummary()}}</p>
+      <p class="info-today">{{ todaySummary() }}</p>
     </div>
     @if (isCompleted()) {
-    <button 
-        title="you reach your target"
-        (click)="onCompleteClick()" 
-        type="button" 
-        class="check-btn reset-track"
-        [style.backgroundColor]="habit().color">
-        ✔
+    <button
+      title="you reach your target"
+      (click)="onCompleteClick()"
+      type="button"
+      class="check-btn reset-track"
+      [style.backgroundColor]="habit().color"
+    >
+      ✔
     </button>
     } @else {
-    <button 
-        (click)="onIncrementClick()" 
-        type="button" 
-        class="check-btn edit-track">
+    <button
+      (click)="onIncrementClick()"
+      type="button"
+      class="check-btn edit-track"
+    >
       <app-circular-progress-bar
         [circleColor]="getVariantColor('60')"
         [backgroundColor]="getVariantColor('40')"
@@ -34,3 +36,13 @@
     <app-habit-progress-component [habit]="habit()" />
   </div>
 </div>
+@if (customValueInputOpen) {
+<app-custom-value-input
+  [title]="customValueInputTitle()"
+  [target]="habit().target"
+  [(ngModel)]="customValue"
+  [progressColor]="habit().color"
+  [allowExceedTarget]="habit().allowExceedTarget"
+  (onCloseClick)="onCustomValueInputClose()"
+/>
+}
