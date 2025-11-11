@@ -4,7 +4,7 @@
       <span class="emoji">{{ habit().emoji }}</span>
     </div>
     <div class="info">
-      <p class="info-name">{{ habit().name }}</p>
+      <a [routerLink]="habitUrl()" [routerLinkActive]="habitUrl()" class="info-name">{{ habit().name }}</a>
       <p class="info-desc">{{ habit().description }}</p>
       <p class="info-today">{{ todaySummary() }}</p>
     </div>

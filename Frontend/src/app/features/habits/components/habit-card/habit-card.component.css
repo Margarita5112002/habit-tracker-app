@@ -58,7 +58,13 @@
 }
 
 .info-name {
+    text-decoration: none;
+    color: #000;
     font-weight: 500;
+}
+
+.info-name:hover {
+    text-decoration: underline;
 }
 
 .info-desc {

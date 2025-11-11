@@ -16,6 +16,10 @@ export class HabitApiService {
         return this.http.get<Habit[]>(this.baseUrl);
     }
 
+    getHabitById(id: string): Observable<Habit> {
+        return this.http.get<Habit>(`${this.baseUrl}/${id}`)
+    }
+
     createHabit(request: CreateHabitRequest): Observable<Habit> {
         return this.http.post<Habit>(this.baseUrl, request);
     }

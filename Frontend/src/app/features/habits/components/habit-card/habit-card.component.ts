@@ -7,6 +7,7 @@ import { calculateCompletionPercentage, getCompletionsInLastDays, getCompletions
 import { HabitProgressGraphComponent } from "../habit-progress-graph/habit-progress-graph.component";
 import { CustomValueInputComponent } from "../../../../shared/custom-value-input/custom-value-input.component";
 import { FormsModule } from "@angular/forms";
+import { RouterLink, RouterLinkActive } from "@angular/router";
 
 @Component({
     selector: 'app-habit-card',
@@ -15,6 +16,8 @@ import { FormsModule } from "@angular/forms";
     imports: [
         NgStyle,
         FormsModule,
+        RouterLink,
+        RouterLinkActive,
         CustomValueInputComponent,
         CircularProgressBarComponent,
         HabitProgressGraphComponent
@@ -25,6 +28,10 @@ export class HabitCardComponent {
     habitService = inject(HabitService)
     habit = input.required<Habit>()
 
+    habitUrl = computed(() => {
+        const id = this.habit().id
+        return '/habit/' + id
+    })
     percentage = computed(() => {
         return calculateCompletionPercentage(this.habit(), this.today)
     })

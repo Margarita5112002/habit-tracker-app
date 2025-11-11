@@ -1,5 +1,5 @@
 import { inject, Injectable, OnDestroy } from "@angular/core"
-import { catchError, debounceTime, EMPTY, finalize, Observable, of, scan, Subject, takeUntil, tap } from "rxjs"
+import { catchError, debounceTime, EMPTY, finalize, Observable, of, scan, Subject, takeUntil, tap, throwError } from "rxjs"
 import { Habit } from "../models/habit.model"
 import { HabitApiService } from "./habit-api.service"
 import { HabitStateService } from "./habit-state.service"
@@ -7,6 +7,7 @@ import { CreateHabitRequest, HabitTrackChangeRequest } from "../models/habit-dto
 import { HabitTrackChange } from "../models/habit-track-change.model"
 import { applyChangeToHabitTrack } from "../utils/habit-calculations.util"
 import { isValidTrackChange } from "../utils/habit-validators.utils"
+import { HttpErrorResponse } from "@angular/common/http"
 
 @Injectable({
     providedIn: 'root'
@@ -137,6 +138,29 @@ export class HabitService implements OnDestroy {
                 return of(null)
             }),
             finalize(() => this.state.setLoading('create', false)),
+            takeUntil(this.destroy$)
+        )
+    }
+
+    getHabitById(id: string, useCache = true): Observable<Habit | null> {
+        if (useCache) {
+            const habit = this.state.getHabitById(id)
+            if (habit) return of(habit)
+        }
+
+        if (this.state.loading().read) EMPTY
+
+        this.state.setLoading('read', true)
+        this.state.setError(null)
+
+        return this.api.getHabitById(id).pipe(
+            catchError(err => {
+                if (err instanceof HttpErrorResponse) {
+                    if (err.status == 404) return of(null)
+                }
+                return throwError(() => err)
+            }),
+            finalize(() => this.state.setLoading('read', false)),
             takeUntil(this.destroy$)
         )
     }

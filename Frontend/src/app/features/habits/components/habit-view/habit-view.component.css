@@ -1,0 +1,22 @@
+.container {
+    margin: 10px;
+}
+
+.options {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px;
+    gap: 10px;
+}
+
+.options__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: var(--primary-white);
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    color: var(--primary-purple);
+}

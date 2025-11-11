@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { habitResolver } from './core/resolvers/habit.resolver';
 
 export const routes: Routes = [
     {
@@ -16,6 +17,14 @@ export const routes: Routes = [
                 path: 'create',
                 loadComponent: () => import('./features/habits/components/create-habit-form/create-habit-form.component')
                     .then(c => c.CreateHabitFormComponent),
+            },
+            {
+                path: 'habit/:id',
+                loadComponent: () => import('./features/habits/components/habit-view/habit-view.component')
+                    .then(c => c.HabitViewComponent),
+                resolve: {
+                    habit: habitResolver
+                }
             }
         ]
     },

@@ -59,6 +59,7 @@ public class HabitService(
     public Result<Habit?> GetById(string id, Guid userId)
     {
         var habit = context.Habits
+            .Include(h => h.HabitTracks)
             .FirstOrDefault(h => h.Id.ToString() == id && h.UserId == userId && !h.IsArchived);
         return Result.Ok(habit);
     }
