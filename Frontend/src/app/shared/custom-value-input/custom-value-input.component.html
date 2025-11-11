@@ -1,5 +1,5 @@
 <div (click)="onModalClick($event)" class="modal">
-  <div class="content">
+  <div class="content" (click)="$event.stopPropagation()">
     <div class="header">
       <h2>{{ title() }}</h2>
       <button
@@ -23,11 +23,11 @@
       <button (click)="plus()" class="input-box__btn" type="button" id="btnPlus">+</button>
     </div>
     <div class="step-amount-group__radios">
-      <input [(ngModel)]="stepAmount" type="radio" id="byOneStep" name="step-amount" value="1"/>
-      <input [(ngModel)]="stepAmount"  type="radio" id="byFiveStep" name="step-amount" value="5" />
-      <input [(ngModel)]="stepAmount"  type="radio" id="byTenStep" name="step-amount" value="10" />
-      <input [(ngModel)]="stepAmount"  type="radio" id="byFiftyStep" name="step-amount" value="50" />
-      <input [(ngModel)]="stepAmount"  type="radio" id="byHundredStep" name="step-amount" value="100" />
+      <input [checked]="stepAmount() === 1" (change)="stepAmount.set(1)" type="radio" id="byOneStep" name="step-amount" value="1"/>
+      <input [checked]="stepAmount() === 5" (change)="stepAmount.set(5)" type="radio" id="byFiveStep" name="step-amount" value="5" />
+      <input [checked]="stepAmount() === 10" (change)="stepAmount.set(10)" type="radio" id="byTenStep" name="step-amount" value="10" />
+      <input [checked]="stepAmount() === 50" (change)="stepAmount.set(50)" type="radio" id="byFiftyStep" name="step-amount" value="50" />
+      <input [checked]="stepAmount() === 100" (change)="stepAmount.set(100)" type="radio" id="byHundredStep" name="step-amount" value="100" />
     </div>
     <div class="step-amount-group">
         <label class="border-radius-left" for="byOneStep">1</label>

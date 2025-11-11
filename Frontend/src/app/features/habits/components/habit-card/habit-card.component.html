@@ -41,9 +41,9 @@
   [title]="customValueInputTitle()"
   [target]="leftToDoToday()"
   [min]="0"
-  [(ngModel)]="customValue"
+  [initialValue]="initialCustomValue()"
   [progressColor]="habit().color"
   [allowExceedTarget]="habit().allowExceedTarget"
-  (onCloseClick)="onCustomValueInputClose()"
+  (onCloseClick)="onCustomValueInputClose($event)"
 />
 }

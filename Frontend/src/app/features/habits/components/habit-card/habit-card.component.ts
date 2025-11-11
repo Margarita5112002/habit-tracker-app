@@ -92,42 +92,41 @@ export class HabitCardComponent {
 
         return `${name}, ${date}. how much completions have you done today?`
     })
-    customValue = signal(0)
+    initialCustomValue = signal(0)
 
     getVariantColor(str: string) {
         return this.habit().color + str
     }
 
     private openCustomValueInput() {
-        this.customValue.set(this.completionsToday())
+        this.initialCustomValue.set(this.completionsToday())
         this.customValueInputOpen.set(true)
     }
 
-    onCustomValueInputClose() {
+    onCustomValueInputClose(value: number) {
         const allowExceedTarget = this.habit().allowExceedTarget
         const target = this.habit().target
         const done = this.completionsDoneNotToday()
         const doneToday = this.completionsToday()
         this.customValueInputOpen.set(false)
 
-        if (doneToday == this.customValue()) return
+        if (doneToday == value) return
 
-        if (!allowExceedTarget && this.customValue() + done > target) {
+        if (!allowExceedTarget && value + done > target) {
             this.increment(target - done)
-        } else if (this.customValue() < 0) {
+        } else if (value < 0) {
             this.increment(0 - doneToday)
         } else {
-            this.increment(this.customValue() - doneToday)
+            this.increment(value - doneToday)
         }
 
 
     }
 
     private increment(increment: number) {
-        const d = new Date()
-        const day = d.getDate()
-        const month = d.getMonth() + 1
-        const year = d.getFullYear()
+        const day = this.today.getDate()
+        const month = this.today.getMonth() + 1
+        const year = this.today.getFullYear()
         this.habitService.incrementTrack({ habitId: this.habit().id, year, month, day, increment })
 
     }
