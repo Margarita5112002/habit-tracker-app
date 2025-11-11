@@ -9,5 +9,6 @@ public interface IHabitService
     Task<Result<Habit>> CreateHabit(CreateHabitRequest request, Guid userId);
 
     Result<Habit?> GetById(string id, Guid userId);
-    public Result<List<Habit>> GetAllByUser(Guid userId);
+    Result<List<Habit>> GetAllByUser(Guid userId);
+    bool DeleteHabit(Guid id, Guid userId);
 }

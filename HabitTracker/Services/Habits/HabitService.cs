@@ -68,9 +68,18 @@ public class HabitService(
     {
         var habits = context.Habits
             .Include(h => h.HabitTracks)
-            .Where(h => h.UserId == userId)
+            .Where(h => h.UserId == userId && !h.IsArchived)
             .ToList();
         return Result.Ok(habits);
+    }
+    public bool DeleteHabit(Guid id, Guid userId)
+    {
+        var habit = context.Habits
+            .FirstOrDefault(h => h.Id == id && h.UserId == userId && !h.IsArchived);
+        if (habit == null) return false;
+        habit.IsArchived = true;
+        context.SaveChanges();
+        return true;
     }
 
 }

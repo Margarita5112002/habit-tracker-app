@@ -107,6 +107,22 @@ public class HabitsController(
         return NoContent();
     }
 
+    [HttpDelete("{id}")]
+    public IActionResult DeleteHabit(string id)
+    {
+        User? user = currentUser.GetUser();
+        if (user == null) return Unauthorized();
+
+        if (!Guid.TryParse(id, out var habitGuid))
+        {
+            return NotFound();
+        }
+
+        var result = habitService.DeleteHabit(habitGuid, user.Id);
+        if (!result) return NotFound();
+        return NoContent();
+    }
+
     private static HabitDTO HabitToDTO(Habit habit)
     {
         var tracks = habit.HabitTracks?.Select(HabitTrackToDTO).ToList();

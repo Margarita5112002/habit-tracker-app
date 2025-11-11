@@ -1,6 +1,6 @@
 @HabitTracker_HostAddress = https://localhost:7213
-@AccessToken = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWFyaWExMjMiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhQGIuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiOWJkYWZlNi0xYTc3LTRlNzAtZjI0MC0wOGRlMTFhNzlkYTAiLCJqdGkiOiI4ZjQ3YTgyYy0wMzI4LTQwMTQtOGQ2MC01NGM0ZjU0YzAxNTciLCJleHAiOjE3NjE5NDA2NzYsImlzcyI6IkhhYml0IFRyYWNrZXIgQVBJIiwiYXVkIjoiVXNlcnMifQ.k6DgDf0hKyCYth5ncucd6p_54nJpF20j7KfbqxINMYegCLV3n3vW9piDBwwN0vP5WRbKvoEbP9dIgmSh4_3y8w
-@RefreshToken = f51595cc-c1c0-4959-b6b3-d9ddfb0dd9f4-32830d5b-c499-4d52-9241-834c35b90680
+@AccessToken = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWFyaWExMjMiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhQGIuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI5MTFiMGIyMS01Zjk2LTQ2ZjItMTYyNy0wOGRlMjBlNDU3ZWIiLCJqdGkiOiI2ZWNjZjZmNi1mMzMwLTQ1MzctYWU2MC1iOWQ4NjZjZDdkZTIiLCJleHAiOjE3NjI4NDA2MjYsImlzcyI6IkhhYml0IFRyYWNrZXIgQVBJIiwiYXVkIjoiVXNlcnMifQ.g0zdnxmFmlqIGXaXPV_EsYE8pi01ZeL7c9LbGlmtjQ5hMlYKFsji_I26WvKoyzbDgxsGwSs67_QEMu9cFNEWfA
+@RefreshToken = 576bf46b-c799-4140-ac98-eb304e828667-6bd92a41-51e4-4387-8ab0-7b117fa4f241
 
 POST {{HabitTracker_HostAddress}}/api/auth/register
 Content-Type: application/json
@@ -50,7 +50,7 @@ Content-Type: application/json
 }
 
 ###
-GET {{HabitTracker_HostAddress}}/api/Habits/1f6909d8-8afd-4e32-9936-08de119f1b7f
+GET {{HabitTracker_HostAddress}}/api/Habits/3be3365c-52a6-470c-1816-08de20e532e1
 Authorization: bearer {{AccessToken}}
 
 ###
@@ -68,3 +68,8 @@ Content-Type: application/json
         "31": "4"
     }
 }
+
+###
+
+DELETE  {{HabitTracker_HostAddress}}/api/Habits/3be3365c-52a6-470c-1816-08de20e532e1
+Authorization: bearer {{AccessToken}}
