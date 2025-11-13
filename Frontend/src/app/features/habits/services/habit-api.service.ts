@@ -24,6 +24,10 @@ export class HabitApiService {
         return this.http.post<Habit>(this.baseUrl, request);
     }
 
+    deleteHabit(id: string) {
+        return this.http.delete(`${this.baseUrl}/${id}`)
+    }
+
     incrementTrack(change: HabitTrackChangeRequest): Observable<void> {
         const { habitId, year, month, dayUpdates } = change
         const url = `${this.baseUrl}/${habitId}/track/${year}/${month}/days/increment`;

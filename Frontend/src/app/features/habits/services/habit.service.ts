@@ -142,6 +142,24 @@ export class HabitService implements OnDestroy {
         )
     }
 
+    deleteHabit(id: string) {
+        if (this.state.loading().delete) return EMPTY
+
+        this.state.setLoading('delete', true)
+        this.state.setError(null)
+
+        return this.api.deleteHabit(id).pipe(
+            tap(() => this.state.removeHabit(id)),
+            catchError(error => {
+                this.state.setError('Failed to delete habit')
+                console.error('Error deleting habit:', error)
+                return of(null)
+            }),
+            finalize(() => this.state.setLoading('delete', false)),
+            takeUntil(this.destroy$)
+        )
+    }
+
     getHabitById(id: string, useCache = true): Observable<Habit | null> {
         if (useCache) {
             const habit = this.state.getHabitById(id)
@@ -154,6 +172,7 @@ export class HabitService implements OnDestroy {
         this.state.setError(null)
 
         return this.api.getHabitById(id).pipe(
+            tap(habit => this.state.addHabit(habit)),
             catchError(err => {
                 if (err instanceof HttpErrorResponse) {
                     if (err.status == 404) return of(null)

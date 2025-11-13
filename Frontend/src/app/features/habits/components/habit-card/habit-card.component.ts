@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from "@angular/core";
 import { formatDate, NgStyle } from "@angular/common";
 import { CircularProgressBarComponent } from "../../../../shared/circular-progress-bar/circular-progress-bar.component";
 import { HabitService } from "../../services/habit.service";
@@ -21,7 +21,8 @@ import { RouterLink, RouterLinkActive } from "@angular/router";
         CustomValueInputComponent,
         CircularProgressBarComponent,
         HabitProgressGraphComponent
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HabitCardComponent {
     private today = new Date()
@@ -41,7 +42,7 @@ export class HabitCardComponent {
         const freq = this.habit().frequencyInDays
         return getCompletionsInLastDays(this.tracks(), this.today, freq)
     })
-    completionsDoneNotToday = computed(() => 
+    completionsDoneNotToday = computed(() =>
         this.completionsDone() - this.completionsToday())
     leftToDo = computed(() => {
         const target = this.habit().target
@@ -119,7 +120,6 @@ export class HabitCardComponent {
         } else {
             this.increment(value - doneToday)
         }
-
 
     }
 

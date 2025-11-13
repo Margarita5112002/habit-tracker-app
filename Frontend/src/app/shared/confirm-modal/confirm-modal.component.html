@@ -1,0 +1,17 @@
+<div class="modal">
+  <div class="content">
+    <button
+      (click)="onCancelClick()"
+      class="btn-close"
+      type="button"
+      id="btnClose"
+    >
+      &times;
+    </button>
+    <h2 class="message">{{ message() }}</h2>
+    <div class="buttons">
+      <button (click)="onConfirmClick()" class="btn btn-confirm">Yes</button>
+      <button (click)="onCancelClick()" class="btn btn-cancel">Cancel</button>
+    </div>
+  </div>
+</div>

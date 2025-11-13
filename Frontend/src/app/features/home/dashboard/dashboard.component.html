@@ -3,7 +3,7 @@
     @if (loading()) {
         <div>loading ...</div>
     } @else {
-        @for (habit of habits(); track $index) {
+        @for (habit of habits(); track habit.id) {
             <app-habit-card [habit]="habit" />
         }
     }

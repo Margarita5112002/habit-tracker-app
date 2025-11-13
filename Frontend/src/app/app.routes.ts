@@ -23,7 +23,7 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/habits/components/habit-view/habit-view.component')
                     .then(c => c.HabitViewComponent),
                 resolve: {
-                    habit: habitResolver
+                    habitId: habitResolver
                 }
             }
         ]
