@@ -1,6 +1,6 @@
 @HabitTracker_HostAddress = https://localhost:7213
-@AccessToken = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWFyaWExMjMiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhQGIuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI5MTFiMGIyMS01Zjk2LTQ2ZjItMTYyNy0wOGRlMjBlNDU3ZWIiLCJqdGkiOiI2ZWNjZjZmNi1mMzMwLTQ1MzctYWU2MC1iOWQ4NjZjZDdkZTIiLCJleHAiOjE3NjI4NDA2MjYsImlzcyI6IkhhYml0IFRyYWNrZXIgQVBJIiwiYXVkIjoiVXNlcnMifQ.g0zdnxmFmlqIGXaXPV_EsYE8pi01ZeL7c9LbGlmtjQ5hMlYKFsji_I26WvKoyzbDgxsGwSs67_QEMu9cFNEWfA
-@RefreshToken = 576bf46b-c799-4140-ac98-eb304e828667-6bd92a41-51e4-4387-8ab0-7b117fa4f241
+@AccessToken = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibWFyaWExMjMiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhQGIuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI5MTFiMGIyMS01Zjk2LTQ2ZjItMTYyNy0wOGRlMjBlNDU3ZWIiLCJqdGkiOiIxMGFiODI4My00YTdjLTQyNGUtYTlkZi0wOGJlZWM2MjA0YzMiLCJleHAiOjE3NjMwMDk2NTUsImlzcyI6IkhhYml0IFRyYWNrZXIgQVBJIiwiYXVkIjoiVXNlcnMifQ.ucmNxr1BhvNcLQL097HT4_jlBStsZIBxuo6kEWa_z73klwHrUfSzCOih3y-H0BuHT1nmAQDy2--fhRg1Z5ZpgA
+@RefreshToken = 405b8fae-2c2f-4faf-b134-4ccf8700327b-08afae31-f82a-42b9-9f7c-28ff325a83f8
 
 POST {{HabitTracker_HostAddress}}/api/auth/register
 Content-Type: application/json
@@ -50,6 +50,22 @@ Content-Type: application/json
 }
 
 ###
+PUT {{HabitTracker_HostAddress}}/api/habits/d2dc44fa-4e66-4515-21f6-08de226dfd65
+Authorization: bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "name": "no read",
+    "description": "read 10 per week",
+    "color": "#ff00ff",
+    "emoji": "a",
+    "target": 10,
+    "frequencyInDays": 7,
+    "AllowCustomValue": false,
+    "AllowExceedTarget": true
+}
+
+###
 GET {{HabitTracker_HostAddress}}/api/Habits/3be3365c-52a6-470c-1816-08de20e532e1
 Authorization: bearer {{AccessToken}}
 
@@ -59,7 +75,7 @@ Authorization: bearer {{AccessToken}}
 
 ###
 
-PATCH {{HabitTracker_HostAddress}}/api/Habits/b6d867bd-0042-423f-31eb-08de17244819/track/2025/6/days/increment
+PATCH {{HabitTracker_HostAddress}}/api/Habits/d2ec44fa-4e66-4515-21f6-08de226dfd65/track/2025/6/days/increment
 Authorization: bearer {{AccessToken}}
 Content-Type: application/json
 

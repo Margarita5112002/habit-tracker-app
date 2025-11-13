@@ -59,7 +59,12 @@ public class HabitsController(
         User? user = currentUser.GetUser();
         if (user == null) return Unauthorized();
 
-        var result = habitService.GetById(id, user.Id);
+        if (!Guid.TryParse(id, out Guid habitId))
+        {
+            return NotFound();
+        }
+
+        var result = habitService.GetById(habitId, user.Id);
         if (result.IsSuccess)
         {
             if (result.Value == null) return NotFound();
@@ -85,13 +90,58 @@ public class HabitsController(
         return BadRequest();
     }
 
-    [HttpPatch("{habitId}/track/{year}/{month}/days/increment")]
-    public async Task<IActionResult> IncrementHabitTrack(string habitId, int year, int month, [FromBody] IncrementHabitTrackerRequest request)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateHabit(string id, UpdateHabitRequest request)
+    {
+        var user = currentUser.GetUser();
+        if (user == null) return Unauthorized();
+
+        if(!Guid.TryParse(id, out Guid habitId))
+        {
+            return NotFound();
+        }
+
+        var result = habitService.UpdateHabit(habitId, user.Id, request);
+        if (result.IsSuccess)
+        {
+            var habit = result.Value;
+            if (habit == null) return NotFound();
+            return NoContent();
+        }
+
+        Dictionary<string, List<string>> errors = result.Errors
+            .Where(e => e.Metadata != null && e.Metadata.ContainsKey("field"))
+            .GroupBy(x => x.Metadata["field"])
+            .ToDictionary(
+                g => g.Key.ToString() ?? "",
+                g => g.Select(x => x.Message).ToList()
+            );
+
+        return Problem(
+            title: "Invalid habit",
+            statusCode: StatusCodes.Status400BadRequest,
+            instance: HttpContext.Request.Path,
+            extensions: new Dictionary<string, object?>
+            {
+                ["errors"] = errors
+            }
+        );
+
+    }
+
+    [HttpPatch("{id}/track/{year}/{month}/days/increment")]
+    public async Task<IActionResult> IncrementHabitTrack(string id, int year, int month, [FromBody] IncrementHabitTrackerRequest request)
     {
         if (year < 2020) return BadRequest("Invalid year");
         if (month < 1 || month > 12) return BadRequest("Invalid month");
         var user = currentUser.GetUser();
         if (user == null) return Unauthorized();
+
+
+        if (!Guid.TryParse(id, out Guid habitId))
+        {
+            return BadRequest();
+        }
 
         var habitResult = habitService.GetById(habitId, user.Id);
         if (habitResult.IsFailed) return BadRequest();

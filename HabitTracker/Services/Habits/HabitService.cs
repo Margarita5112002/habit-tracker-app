@@ -2,6 +2,7 @@ using FluentResults;
 using HabitTracker.Data;
 using HabitTracker.Models.Entities;
 using HabitTracker.Models.Requests;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HabitTracker.Services.Habits;
@@ -13,30 +14,6 @@ public class HabitService(
 
     public async Task<Result<Habit>> CreateHabit(CreateHabitRequest request, Guid userId)
     {
-        IList<Result> errors = [];
-        if (request.Target <= 0)
-        {
-            errors.Add(
-                Result.Fail(
-                    new Error("Target cannot be less or equal to 0")
-                    .WithMetadata("field", "Target")
-                )
-            );
-        }
-        if (request.FrequencyInDays <= 0)
-        {
-            errors.Add(
-                Result.Fail(
-                    new Error("Frequency in days cannot be less or equal to 0")
-                    .WithMetadata("field", "FrequencyInDays")
-                )
-            );
-        }
-        if (errors.Count > 0)
-        {
-            return errors.Merge();
-        }
-
         Habit newHabit = new Habit
         {
             Name = request.Name,
@@ -51,16 +28,73 @@ public class HabitService(
             UserId = userId,
         };
 
+        var errors = ValidateHabit(newHabit);
+        if (errors.Count > 0)
+        {
+            return errors.Merge();
+        }
+
         context.Habits.Add(newHabit);
         await context.SaveChangesAsync();
         return Result.Ok(newHabit);
     }
 
-    public Result<Habit?> GetById(string id, Guid userId)
+    public Result<Habit?> UpdateHabit(Guid habitId, Guid userId, UpdateHabitRequest request)
+    {
+        var habitResult = GetById(habitId, userId);
+        if (habitResult.IsFailed) return habitResult;
+        var habit = habitResult.Value;
+        if (habit == null) return Result.Ok<Habit?>(null);
+
+        habit.Name = request.Name;
+        habit.Description = request.Description;
+        habit.Color = request.Color;
+        habit.Emoji = request.Emoji;
+        habit.Target = request.Target;
+        habit.FrequencyInDays = request.FrequencyInDays;
+        habit.AllowCustomValue = request.AllowCustomValue;
+        habit.AllowExceedTarget = request.AllowExceedTarget;
+
+        var errors = ValidateHabit(habit);
+        if (errors.Count > 0)
+        {
+            return errors.Merge();
+        }
+
+        context.SaveChanges();
+
+        return Result.Ok<Habit?>(habit);
+    }
+
+    private static IList<Result> ValidateHabit(Habit habit)
+    {
+        IList<Result> errors = [];
+        if (habit.Target <= 0)
+        {
+            errors.Add(
+                Result.Fail(
+                    new Error("Target cannot be less or equal to 0")
+                    .WithMetadata("field", "Target")
+                )
+            );
+        }
+        if (habit.FrequencyInDays <= 0)
+        {
+            errors.Add(
+                Result.Fail(
+                    new Error("Frequency in days cannot be less or equal to 0")
+                    .WithMetadata("field", "FrequencyInDays")
+                )
+            );
+        }
+        return errors;
+    }
+
+    public Result<Habit?> GetById(Guid id, Guid userId)
     {
         var habit = context.Habits
             .Include(h => h.HabitTracks)
-            .FirstOrDefault(h => h.Id.ToString() == id && h.UserId == userId && !h.IsArchived);
+            .FirstOrDefault(h => h.Id == id && h.UserId == userId && !h.IsArchived);
         return Result.Ok(habit);
     }
 
