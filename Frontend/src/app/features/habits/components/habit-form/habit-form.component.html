@@ -1,9 +1,9 @@
 <form class="container" [formGroup]="form" (ngSubmit)="onFormSubmit($event)">
   <div class="emoji-group" [style.backgroundColor]="selectedColor">
     <button class="emoji-group__btn" type="button" (click)="togglePicker()">
-      <span class="emoji-group__span">{{ emojiChose }}</span>
+      <span class="emoji-group__span">{{ emojiChose() }}</span>
     </button>
-    @if (showPicker) {
+    @if (showPicker()) {
     <app-emoji-picker
       class="emoji-picker"
       (onClickOutside)="closeEmojiPicker()"

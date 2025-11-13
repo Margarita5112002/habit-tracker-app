@@ -8,3 +8,4 @@ export interface HabitTrackChangeRequest {
 }
 
 export type CreateHabitRequest = Omit<Habit, 'id' | 'habitTracks'>
+export type UpdateHabitRequest = Omit<Habit, 'id' | 'habitTracks'>

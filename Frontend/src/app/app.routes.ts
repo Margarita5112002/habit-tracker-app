@@ -25,6 +25,14 @@ export const routes: Routes = [
                 resolve: {
                     habitId: habitResolver
                 }
+            },
+            {
+                path: 'edit-habit/:id',
+                loadComponent: () => import('./features/habits/components/edit-habit-form/edit-habit-form.component')
+                    .then(c => c.EditHabitFormComponent),
+                resolve: {
+                    habitId: habitResolver
+                }
             }
         ]
     },

@@ -23,6 +23,10 @@ export class HabitViewComponent {
     readonly habit = computed(() => 
         this.habitState.getHabitById(this.habitId())!)
 
+    onEditClick() {
+        this.router.navigate(['/', 'edit-habit', this.habitId()])
+    }
+
     onDeleteClick() {
         this.confirmDeleteHabitModalOpen.set(true)
     }

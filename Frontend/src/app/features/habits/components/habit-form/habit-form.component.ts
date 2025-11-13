@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, inject, input, output } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, input, OnInit, output, signal } from "@angular/core";
 import { EmojiPickerComponent } from "../../../../shared/emoji-picker/emoji-picker.component";
 import { ColorPickerComponent } from "../../../../shared/color-picker/color-picker.component";
-import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { SwitchComponent } from "../../../../shared/switch/switch.component";
 import { Habit } from "../../models/habit.model";
 
@@ -11,38 +11,71 @@ import { Habit } from "../../models/habit.model";
     styleUrls: ['./habit-form.component.css'],
     imports: [ReactiveFormsModule, EmojiPickerComponent, ColorPickerComponent, SwitchComponent]
 })
-export class HabitFormComponent {
-    fb = inject(FormBuilder)
-    form = this.fb.group({
-        'name': ['', [Validators.required, Validators.maxLength(100)]],
-        'description': ['', [Validators.maxLength(500)]],
-        'color': ['#FF6B6B', [Validators.required]],
-        'target': [1, [Validators.required, Validators.min(1)]],
-        'frequency': ["1"],
-        'frequencyCustom': [1, [Validators.required, Validators.min(1)]],
-        'allowCustomValue': [true],
-        'allowExceedTarget': [true],
-    })
-    onSubmitHabit = output<Omit<Habit, 'id'>>()
-    onCancel = output<void>()
-    disabled = input(false)
+export class HabitFormComponent implements OnInit {
+    private readonly fb = inject(FormBuilder)
+    private readonly cdr = inject(ChangeDetectorRef)
+    form!: FormGroup
 
-    showPicker = false
-    emojiChose = '🤓'
+    readonly initialData = input<Habit>()
+    readonly onSubmitHabit = output<Omit<Habit, 'id'>>()
+    readonly onCancel = output<void>()
+    readonly disabled = input(false)
 
-    constructor(private cdr: ChangeDetectorRef) { }
+    showPicker = signal(false)
+    emojiChose = signal('🤓')
+
+    ngOnInit(): void {
+        this.initializeForm()
+    }
+
+    private initializeForm() {
+        const data = this.initialData()
+        const formData = {
+            name: data ? data.name : '',
+            description: data ? data.description : '',
+            color: data ? data.color : "#FF6B6B",
+            target: data ? data.target : 1,
+            allowCustomValue: data ? data.allowCustomValue : true,
+            allowExceedTarget: data ? data.allowExceedTarget : true,
+            frequency: "1",
+            frequencyCustom: 1
+        }
+
+        if (data?.frequencyInDays === 1 ||
+            data?.frequencyInDays === 7 || 
+            data?.frequencyInDays === 30
+        ) {
+            formData.frequency = data.frequencyInDays.toString()
+        } else if (data){
+            formData.frequency = "custom"
+            formData.frequencyCustom = data.frequencyInDays
+        } 
+
+        if(data) this.emojiChose.set(data.emoji)
+
+        this.form = this.fb.group({
+            'name': [formData.name, [Validators.required, Validators.maxLength(100)]],
+            'description': [formData.description, [Validators.maxLength(500)]],
+            'color': [formData.color, [Validators.required]],
+            'target': [formData.target, [Validators.required, Validators.min(1)]],
+            'frequency': [formData.frequency],
+            'frequencyCustom': [formData.frequencyCustom, [Validators.required, Validators.min(1)]],
+            'allowCustomValue': [formData.allowCustomValue],
+            'allowExceedTarget': [formData.allowExceedTarget],
+        })
+    }
 
     get nameControl() {
-        return this.form.controls.name
+        return this.form.controls["name"]
     }
     get descriptionControl() {
-        return this.form.controls.description
+        return this.form.controls["description"]
     }
     get targetControl() {
-        return this.form.controls.target
+        return this.form.controls["target"]
     }
     get frequencyCustomControl() {
-        return this.form.controls.frequencyCustom
+        return this.form.controls["frequencyCustom"]
     }
 
     get allowCustomValue() {
@@ -62,7 +95,7 @@ export class HabitFormComponent {
     }
 
     get emojiIsValid() {
-        return this.emojiChose.length > 0 && this.emojiChose.length <= 10
+        return this.emojiChose().length > 0 && this.emojiChose().length <= 10
     }
 
     get frequencyCustomIsValidIfSet() {
@@ -74,7 +107,7 @@ export class HabitFormComponent {
     }
 
     resetFrequencyCustom() {
-        this.form.controls.frequencyCustom.setValue(1)
+        this.form.controls["frequencyCustom"].setValue(1)
     }
 
     onClickCancel() {
@@ -90,7 +123,7 @@ export class HabitFormComponent {
                 name: this.form.value.name ?? "",
                 description: this.form.value.description ?? null,
                 color: this.form.value.color ?? "#fff",
-                emoji: this.emojiChose,
+                emoji: this.emojiChose(),
                 target: this.form.value.target ?? 1,
                 frequencyInDays: freq,
                 allowCustomValue: this.form.value.allowCustomValue ?? false,
@@ -100,17 +133,17 @@ export class HabitFormComponent {
     }
 
     togglePicker() {
-        this.showPicker = !this.showPicker
+        this.showPicker.set(!this.showPicker())
     }
 
     onEmojiChange(data: any) {
         if (typeof data.native == 'string')
-            this.emojiChose = data.native
+            this.emojiChose.set(data.native)
         this.closeEmojiPicker()
     }
 
     closeEmojiPicker() {
-        this.showPicker = false
+        this.showPicker.set(false)
         this.cdr.markForCheck()
     }
 

@@ -2,7 +2,7 @@
     <app-habit-card [habit]="habit()" />
 
     <div class="options">
-        <button type="button" title="edit habit" class="options__btn">
+        <button (click)="onEditClick()" type="button" title="edit habit" class="options__btn">
             <mat-icon class="options__icon">edit_square</mat-icon>
         </button>
         <button (click)="onDeleteClick()" type="button" title="delete habit" class="options__btn">

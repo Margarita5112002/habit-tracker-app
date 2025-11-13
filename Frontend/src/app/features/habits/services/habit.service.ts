@@ -3,7 +3,7 @@ import { catchError, debounceTime, EMPTY, finalize, Observable, of, scan, Subjec
 import { Habit } from "../models/habit.model"
 import { HabitApiService } from "./habit-api.service"
 import { HabitStateService } from "./habit-state.service"
-import { CreateHabitRequest, HabitTrackChangeRequest } from "../models/habit-dtos.model"
+import { CreateHabitRequest, HabitTrackChangeRequest, UpdateHabitRequest } from "../models/habit-dtos.model"
 import { HabitTrackChange } from "../models/habit-track-change.model"
 import { applyChangeToHabitTrack } from "../utils/habit-calculations.util"
 import { isValidTrackChange } from "../utils/habit-validators.utils"
@@ -138,6 +138,24 @@ export class HabitService implements OnDestroy {
                 return of(null)
             }),
             finalize(() => this.state.setLoading('create', false)),
+            takeUntil(this.destroy$)
+        )
+    }
+
+    updateHabit(habitId: string, request: UpdateHabitRequest) {
+        if (this.state.loading().update) return EMPTY
+
+        this.state.setLoading('update', true)
+        this.state.setError(null)
+
+        return this.api.updateHabit(habitId, request).pipe(
+            tap(_ => this.state.updateHabit(habitId, request)),
+            catchError(error => {
+                this.state.setError('Failed to update habit')
+                console.error('Error updating habit:', error)
+                return of(null)
+            }),
+            finalize(() => this.state.setLoading('update', false)),
             takeUntil(this.destroy$)
         )
     }
