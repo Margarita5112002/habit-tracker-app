@@ -4,6 +4,7 @@ import { ColorPickerComponent } from "../../../../shared/color-picker/color-pick
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { SwitchComponent } from "../../../../shared/switch/switch.component";
 import { Habit } from "../../models/habit.model";
+import { COLORS } from "../../../../shared/color-picker/colors";
 
 @Component({
     selector: 'app-habit-form',
@@ -33,7 +34,7 @@ export class HabitFormComponent implements OnInit {
         const formData = {
             name: data ? data.name : '',
             description: data ? data.description : '',
-            color: data ? data.color : "#FF6B6B",
+            color: data ? data.color : COLORS[0].hexa,
             target: data ? data.target : 1,
             allowCustomValue: data ? data.allowCustomValue : true,
             allowExceedTarget: data ? data.allowExceedTarget : true,
