@@ -47,12 +47,15 @@ export class HabitCardComponent {
     leftToDo = computed(() => {
         const target = this.habit().target
         const done = this.completionsDone()
-        return done >= target ? 0 : target - done
+        return Math.max(0, target - done)
     })
     leftToDoToday = computed(() => {
         const target = this.habit().target
         const done = this.completionsDoneNotToday()
-        return done >= target ? 0 : target - done
+        return Math.max(0, target - done)
+    })
+    completionsLimitToday = computed(() => {
+        return Math.max(this.leftToDoToday(), this.completionsToday())
     })
     todaySummary = computed(() => {
         const freq = this.habit().frequencyInDays
@@ -113,8 +116,10 @@ export class HabitCardComponent {
 
         if (doneToday == value) return
 
-        if (!allowExceedTarget && value + done > target) {
-            this.increment(target - done)
+        const maxval = Math.max(target, doneToday + done)
+        if (!allowExceedTarget && value + done > maxval) {
+            console.log("max reach", maxval)
+            this.increment(maxval - done - doneToday)
         } else if (value < 0) {
             this.increment(0 - doneToday)
         } else {

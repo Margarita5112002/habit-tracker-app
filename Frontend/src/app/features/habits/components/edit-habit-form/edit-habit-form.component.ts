@@ -25,7 +25,7 @@ export class EditHabitFormComponent {
         this.habitService.updateHabit(this.habitId(), data)
             .subscribe({
                 next: () => {
-                    this.router.navigate(['/'])
+                    this.router.navigate(['/', 'habit', this.habitId()])
                 }
             })
     }

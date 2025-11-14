@@ -39,7 +39,7 @@
 @if (customValueInputOpen()) {
 <app-custom-value-input
   [title]="customValueInputTitle()"
-  [target]="leftToDoToday()"
+  [target]="completionsLimitToday()"
   [min]="0"
   [initialValue]="initialCustomValue()"
   [progressColor]="habit().color"
