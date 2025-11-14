@@ -5,12 +5,13 @@ import { ConfirmModalComponent } from "../../../../shared/confirm-modal/confirm-
 import { HabitService } from "../../services/habit.service";
 import { HabitStateService } from "../../services/habit-state.service";
 import { Router } from "@angular/router";
+import { NgStyle } from "@angular/common";
 
 @Component({
     selector: 'app-habit-view',
     templateUrl: './habit-view.component.html',
     styleUrl: './habit-view.component.css',
-    imports: [HabitCardComponent, MatIconModule, ConfirmModalComponent]
+    imports: [HabitCardComponent, MatIconModule, ConfirmModalComponent, NgStyle]
 })
 export class HabitViewComponent {
     readonly router = inject(Router)
@@ -22,6 +23,19 @@ export class HabitViewComponent {
 
     readonly habit = computed(() => 
         this.habitState.getHabitById(this.habitId())!)
+
+    readonly frequencyText = computed(() => {
+        const freq = this.habit().frequencyInDays
+        switch(freq) {
+            case 1: return "day";
+            case 7: return "week";
+            case 30: return "month";
+        }
+        return `${freq} days`
+    })
+    readonly infoGoalBorder = computed(() => ({
+        'border-left': `4px solid ${this.habit().color}`
+    }))
 
     onEditClick() {
         this.router.navigate(['/', 'edit-habit', this.habitId()])

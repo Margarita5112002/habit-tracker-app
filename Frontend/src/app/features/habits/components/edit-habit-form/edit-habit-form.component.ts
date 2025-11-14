@@ -21,16 +21,20 @@ export class EditHabitFormComponent {
     readonly habit = computed(() =>
         this.habitState.getHabitById(this.habitId())!)
 
+    private return() {
+        this.router.navigate(['/', 'habit', this.habitId()])
+    }
+
     onSubmit(data: Omit<Habit, 'id'>) {
         this.habitService.updateHabit(this.habitId(), data)
             .subscribe({
                 next: () => {
-                    this.router.navigate(['/', 'habit', this.habitId()])
+                    this.return()
                 }
             })
     }
 
     onCancel() {
-        this.router.navigate(['/'])
+        this.return()
     }
 }
