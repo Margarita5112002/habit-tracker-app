@@ -1,2 +1,14 @@
 <app-menu />
 <router-outlet />
+
+@if (incrementModalConfig(); as config) { @if (config != null) {
+<app-custom-value-input
+  [min]="config.min"
+  [initialValue]="config.initialValue"
+  [allowExceedTarget]="config.allowExceedTarget"
+  [progressColor]="config.progressColor"
+  [target]="config.target"
+  [title]="config.title"
+  (onCloseClick)="config.onClose($event)"
+/>
+} }

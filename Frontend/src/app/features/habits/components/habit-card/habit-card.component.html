@@ -11,7 +11,7 @@
     @if (isCompleted()) {
     <button
       title="you reach your target"
-      (click)="onCompleteClick()"
+      (click)="onIncrementClick()"
       type="button"
       class="check-btn reset-track"
       [style.backgroundColor]="habit().color"
@@ -36,14 +36,3 @@
     <app-habit-progress-component [habit]="habit()" />
   </div>
 </div>
-@if (customValueInputOpen()) {
-<app-custom-value-input
-  [title]="customValueInputTitle()"
-  [target]="completionsLimitToday()"
-  [min]="0"
-  [initialValue]="initialCustomValue()"
-  [progressColor]="habit().color"
-  [allowExceedTarget]="habit().allowExceedTarget"
-  (onCloseClick)="onCustomValueInputClose($event)"
-/>
-}

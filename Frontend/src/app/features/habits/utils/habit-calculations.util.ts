@@ -107,3 +107,38 @@ export function getCompletionsInLastDays(
 
     return total
 }
+
+export function getHabitCalculationsForDate(date: Date, habit: Habit): HabitCalculations {
+    const tracks = habit.habitTracks ?? []
+    const freq = habit.frequencyInDays
+    const target = habit.target
+
+    const completionsOnDate = getCompletionsOnDate(tracks, date)
+    const completionsDone = getCompletionsInLastDays(tracks, date, freq)
+    const completionsDoneNotDate = completionsDone - completionsOnDate
+    const leftToDo = Math.max(0, target - completionsDone)
+    const leftToDoOnDate = Math.max(0, target - completionsDoneNotDate)
+    const completionPercentage = (completionsDone / target) * 100
+
+    return {
+        date,
+        habitId: habit.id,
+        completionPercentage,
+        completionsDone,
+        completionsDoneNotDate,
+        completionsOnDate,
+        leftToDo,
+        leftToDoOnDate
+    }
+}
+
+export interface HabitCalculations {
+    date: Date,
+    habitId: string,
+    completionPercentage: number, 
+    completionsOnDate: number, 
+    completionsDone: number,
+    completionsDoneNotDate: number,
+    leftToDo: number,
+    leftToDoOnDate: number,
+}
