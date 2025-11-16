@@ -1,0 +1,45 @@
+<div class="calendar-container">
+  <div class="calendar-header">
+    <button
+      (click)="previousMonth()"
+      [style.background]="color()"
+      [style.--hover-color]="hoverColor()"
+      class="nav-button"
+    >
+      ‹
+    </button>
+    <h2>{{ getMonthYear() }}</h2>
+    <button
+      (click)="nextMonth()"
+      [style.background]="color()"
+      [style.--hover-color]="hoverColor()"
+      class="nav-button"
+      [disabled]="!canViewNextMonth()"
+    >
+      ›
+    </button>
+  </div>
+
+  <div class="calendar-grid">
+    @for (day of dayNames; track $index) {
+    <div class="day-name">{{ day }}</div>
+    } @for (date of calendarDates; track $index) {
+    <div
+      class="calendar-day"
+      [class.other-month]="!date.isCurrentMonth"
+      [class.today]="date.isToday"
+      [class.selected]="date.isSelected"
+      [style.--hover-color]="hoverColor()"
+      [style.--selected-color]="color()"
+      (click)="onDateClick(date)"
+    >
+      <div class="day-number">{{ date.day }}</div>
+      @if (date.isCurrentMonth && date.value != 0) {
+      <div [style.backgroundColor]="color()" class="value-circle">
+        {{ date.value }}
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>

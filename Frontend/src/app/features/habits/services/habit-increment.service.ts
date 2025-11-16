@@ -16,7 +16,7 @@ export class HabitIncrementService {
     private openModal(date: Date, habit: Habit, calculations: HabitCalculations) {
         this.modalConfigState.set({
             min: 0,
-            target: Math.max(calculations.leftToDoOnDate, calculations.completionsOnDate),
+            target: habit.allowExceedTarget ? calculations.leftToDoOnDate : Math.max(calculations.leftToDoOnDate, calculations.completionsOnDate),
             initialValue: calculations.completionsOnDate,
             progressColor: habit.color,
             allowExceedTarget: habit.allowExceedTarget,

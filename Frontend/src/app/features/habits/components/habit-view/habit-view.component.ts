@@ -6,17 +6,21 @@ import { HabitService } from "../../services/habit.service";
 import { HabitStateService } from "../../services/habit-state.service";
 import { Router } from "@angular/router";
 import { NgStyle } from "@angular/common";
+import { CalendarComponent } from "../../../../shared/calendar/calendar.component";
+import { HabitIncrementService } from "../../services/habit-increment.service";
 
 @Component({
     selector: 'app-habit-view',
     templateUrl: './habit-view.component.html',
     styleUrl: './habit-view.component.css',
-    imports: [HabitCardComponent, MatIconModule, ConfirmModalComponent, NgStyle]
+    imports: [HabitCardComponent, MatIconModule, ConfirmModalComponent, NgStyle, CalendarComponent]
 })
 export class HabitViewComponent {
     readonly router = inject(Router)
     readonly habitService = inject(HabitService)
     readonly habitState = inject(HabitStateService)
+    readonly habitIncrementService = inject(HabitIncrementService)
+
     readonly habitId = input.required<string>() 
     readonly confirmDeleteHabitModalOpen = signal(false)
     readonly confirmDeleteHabitModalMessage = 'Are you sure you want to delete this habit?'
@@ -36,6 +40,12 @@ export class HabitViewComponent {
     readonly infoGoalBorder = computed(() => ({
         'border-left': `4px solid ${this.habit().color}`
     }))
+
+    onDateClick(date: Date) {
+        const today = new Date()
+        if (today < date) return
+        this.habitIncrementService.handleIncrement(date, this.habit())
+    }
 
     onEditClick() {
         this.router.navigate(['/', 'edit-habit', this.habitId()])

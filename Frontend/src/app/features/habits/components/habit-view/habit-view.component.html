@@ -20,9 +20,11 @@
     </button>
   </div>
 
+  <app-calendar [habit]="habit()" (dateSelected)="onDateClick($event)" />
+
   <div class="info">
     <!-- Goal Section -->
-    <div class="info-item info-goal" [ngStyle]="infoGoalBorder()" >
+    <div class="info-item info-goal" [ngStyle]="infoGoalBorder()">
       <div class="info-label">Goal</div>
       <div class="info-value">
         {{ habit().target }} completions per {{ frequencyText() }}
