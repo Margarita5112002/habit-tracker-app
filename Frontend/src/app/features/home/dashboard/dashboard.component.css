@@ -1,3 +1,16 @@
+.options {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 10px;
+    align-items: center;
+    margin: 20px;
+}
+
+.options span {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
 .habit-list {
     display: flex;
     flex-flow: column nowrap;
