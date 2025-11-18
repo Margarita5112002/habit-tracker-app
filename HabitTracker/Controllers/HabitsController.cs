@@ -91,7 +91,7 @@ public class HabitsController(
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateHabit(string id, UpdateHabitRequest request)
+    public IActionResult UpdateHabit(string id, UpdateHabitRequest request)
     {
         var user = currentUser.GetUser();
         if (user == null) return Unauthorized();
