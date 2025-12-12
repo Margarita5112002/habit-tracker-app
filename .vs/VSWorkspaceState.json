@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\HabitTracker",
+    "\\HabitTracker.Tests",
+    "\\HabitTracker\\Controllers",
+    "\\HabitTracker\\Data",
+    "\\HabitTracker\\Models",
+    "\\HabitTracker\\Models\\Requests",
+    "\\HabitTracker\\Properties"
+  ],
+  "SelectedNode": "\\HabitTracker\\Models\\Requests\\CreateHabitRequest.cs",
+  "PreviewInSolutionExplorer": false
+}

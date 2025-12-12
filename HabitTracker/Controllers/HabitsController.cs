@@ -42,7 +42,7 @@ public class HabitsController(
             );
 
         return Problem(
-            title: "Invalid habit",
+            title: "One or more validation errors occurred.",
             statusCode: StatusCodes.Status400BadRequest,
             instance: HttpContext.Request.Path,
             extensions: new Dictionary<string, object?>
